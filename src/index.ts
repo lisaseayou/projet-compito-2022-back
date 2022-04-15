@@ -1,24 +1,16 @@
 /* eslint-disable no-promise-executor-return */
 import { ApolloServer } from 'apollo-server-express';
-import { ApolloServerPluginDrainHttpServer, gql } from 'apollo-server-core';
+import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
 import * as Express from 'express';
+import { loadFile } from 'graphql-import-files';
 import { createServer } from 'http';
 import 'dotenv/config';
+import { PrismaClient } from '@prisma/client';
+import resolvers from './resolvers';
+
+const prisma = new PrismaClient();
 
 const { PORT } = process.env;
-
-// Set schema
-const schema = gql(`
-    type Query {
-        name: String
-    }
-`);
-
-const resolvers = {
-  Query: {
-    name: () => 'John Doe',
-  },
-};
 
 const main = async () => {
   // Create server with express
@@ -27,10 +19,10 @@ const main = async () => {
 
   // Init apollo server
   const server = new ApolloServer({
-    typeDefs: schema,
+    typeDefs: loadFile('./src/schema.graphql'),
     resolvers,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-    context: {},
+    context: { prisma },
   });
 
   await server.start();
