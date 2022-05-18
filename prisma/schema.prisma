@@ -11,3 +11,43 @@ model User {
   id      String    @id @unique @default(uuid()) @db.Uuid
   name    String    @unique
 }
+
+model Comment {
+  id            String    @id @unique @default(uuid()) @db.Uuid
+  comment       String
+  createdAt     DateTime
+  UpdatedAt     DateTime
+}
+
+model Document {
+  id            String    @id @unique @default(uuid()) @db.Uuid
+  name          String
+  size          Int
+  createdAt     DateTime
+}
+
+model Notification {
+  id            String    @id @unique @default(uuid()) @db.Uuid
+  description   String
+  isRead        Boolean
+  createdAt     DateTime
+}
+
+model Project {
+  id            String    @id @unique @default(uuid()) @db.Uuid
+  name          String
+  createdAt     DateTime
+  updatedAt     DateTime
+}
+
+model Task {
+  id                    String    @id @unique @default(uuid()) @db.Uuid
+  subject               String
+  status                String
+  dueDate               String
+  initialSpentTime      Int
+  additionalSpentTime   Int[]
+  advancement           Int
+  createdAt             DateTime
+  updatedAt             DateTime
+}

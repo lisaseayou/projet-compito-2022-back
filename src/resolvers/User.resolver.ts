@@ -1,11 +1,12 @@
 import { Resolver, Query, Ctx, Mutation, Args } from 'type-graphql';
 import User from '../models/User.model';
 import AddUserType from '../input/users/AddUser.input';
-import DeleteUserType from '../input/users/DeleteUser.input';
+import DeleteUserType from '../input/Delete.input';
 import UpdateUserType from '../input/users/UpdateUser.input';
 
 @Resolver(User)
 class UserResolver {
+
   @Query(() => [User, Query])
   async allUsers(@Ctx() ctx: { prisma: any }) {
     return ctx.prisma.user.findMany();
