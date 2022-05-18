@@ -2,11 +2,12 @@
 import { ApolloServer } from 'apollo-server-express';
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
 import * as Express from 'express';
-import { loadFile } from 'graphql-import-files';
 import { createServer } from 'http';
 import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
-import resolvers from './resolvers';
+import "reflect-metadata";
+import { buildSchemaSync } from 'type-graphql';
+import UserResolver from "./resolvers/User.resolver";
 
 const prisma = new PrismaClient();
 
@@ -17,12 +18,15 @@ const main = async () => {
   const app = Express();
   const httpServer = createServer(app);
 
+  const schema = buildSchemaSync({
+    resolvers: [UserResolver],
+  });
+
   // Init apollo server
   const server = new ApolloServer({
-    typeDefs: loadFile('./src/schema.graphql'),
-    resolvers,
+    schema,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
-    context: { prisma },
+    context: () => ({ prisma }),
   });
 
   await server.start();
