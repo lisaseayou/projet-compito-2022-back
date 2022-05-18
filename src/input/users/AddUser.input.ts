@@ -6,4 +6,4 @@ class AddUserInput {
     name: string
 }
 
-export default AddUserInput
+export default AddUserInput;
