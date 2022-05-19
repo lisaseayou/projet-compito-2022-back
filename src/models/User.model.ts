@@ -1,12 +1,27 @@
-import { ObjectType, Field, ID } from 'type-graphql';
+import { ObjectType, Field, ID, GraphQLISODateTime } from 'type-graphql';
 
 @ObjectType()
 class User {
     @Field(() => ID)
-    id: string
+    id: string;
 
     @Field(() => String)
-    name: string
+    name: string;
+
+    @Field(() => String)
+    email: string;
+
+    @Field(() => [String])
+    roles: string[];
+
+    @Field(() => String)
+    password: string;
+
+    @Field(() => GraphQLISODateTime)
+    createdAt: Date;
+
+    @Field(() => GraphQLISODateTime)
+    updatedAt: Date;
 }
 
-export default User
+export default User;
