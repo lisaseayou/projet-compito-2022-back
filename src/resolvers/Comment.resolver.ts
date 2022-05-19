@@ -6,15 +6,19 @@ import UpdateCommentType from '../input/comments/UpdateComment.input';
 
 @Resolver(Comment)
 class CommentResolver {
-
     @Query(() => [Comment, Query])
     async allComments(@Ctx() ctx: { prisma: any }) {
         return ctx.prisma.comment.findMany();
     }
 
     @Mutation(() => Comment)
-    async addComment(@Args() { comment }: AddCommentType, @Ctx() ctx: { prisma: any }) {
-        const commentToDb = await ctx.prisma.comment.create({ data: { comment } });
+    async addComment(
+        @Args() { comment, createdAt, updatedAt }: AddCommentType,
+        @Ctx() ctx: { prisma: any }
+    ) {
+        const commentToDb = await ctx.prisma.comment.create({
+            data: { comment, createdAt, updatedAt },
+        });
         return commentToDb;
     }
 
@@ -29,14 +33,17 @@ class CommentResolver {
 
     @Mutation(() => Comment)
     async updateComment(
-        @Args() { id, comment }: UpdateCommentType,
+        @Args() { id, comment, updatedAt }: UpdateCommentType,
         @Ctx() ctx: { prisma: any }
     ) {
-        const commentToUpdate = ctx.prisma.comment.update({
+        const commentUpdated = ctx.prisma.comment.update({
             where: { id },
-            data: { comment },
+            data: {
+                comment,
+                updatedAt,
+            },
         });
-        return commentToUpdate;
+        return commentUpdated;
     }
 }
 

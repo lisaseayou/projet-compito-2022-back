@@ -16,7 +16,7 @@ model Comment {
   id            String    @id @unique @default(uuid()) @db.Uuid
   comment       String
   createdAt     DateTime
-  UpdatedAt     DateTime
+  updatedAt     DateTime
 }
 
 model Document {

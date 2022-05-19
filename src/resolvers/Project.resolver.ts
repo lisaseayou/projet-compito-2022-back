@@ -6,15 +6,19 @@ import UpdateProjectType from '../input/projects/UpdateProject.input';
 
 @Resolver(Project)
 class ProjectResolver {
-
     @Query(() => [Project, Query])
     async allProjects(@Ctx() ctx: { prisma: any }) {
         return ctx.prisma.project.findMany();
     }
 
     @Mutation(() => Project)
-    async addProject(@Args() { name }: AddProjectType, @Ctx() ctx: { prisma: any }) {
-        const projectToDb = await ctx.prisma.project.create({ data: { name } });
+    async addProject(
+        @Args() { name, createdAt, updatedAt }: AddProjectType,
+        @Ctx() ctx: { prisma: any }
+    ) {
+        const projectToDb = await ctx.prisma.project.create({
+            data: { name, createdAt, updatedAt },
+        });
         return projectToDb;
     }
 
@@ -29,14 +33,17 @@ class ProjectResolver {
 
     @Mutation(() => Project)
     async updateProject(
-        @Args() { id, name }: UpdateProjectType,
+        @Args() { id, name, updatedAt }: UpdateProjectType,
         @Ctx() ctx: { prisma: any }
     ) {
-        const projectToUpdate = ctx.prisma.project.update({
+        const projectUpdated = ctx.prisma.project.update({
             where: { id },
-            data: { name },
+            data: {
+                name,
+                updatedAt,
+            },
         });
-        return projectToUpdate;
+        return projectUpdated;
     }
 }
 

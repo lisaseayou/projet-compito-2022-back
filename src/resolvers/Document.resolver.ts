@@ -5,15 +5,19 @@ import DeleteDocumentType from '../input/Delete.input';
 
 @Resolver(Document)
 class DocumentResolver {
-
     @Query(() => [Document, Query])
     async allDocuments(@Ctx() ctx: { prisma: any }) {
         return ctx.prisma.document.findMany();
     }
 
     @Mutation(() => Document)
-    async addDocument(@Args() { name }: AddDocumentType, @Ctx() ctx: { prisma: any }) {
-        const documentToDb = await ctx.prisma.document.create({ data: { name } });
+    async addDocument(
+        @Args() { name, size, createdAt }: AddDocumentType,
+        @Ctx() ctx: { prisma: any }
+    ) {
+        const documentToDb = await ctx.prisma.document.create({
+            data: { name, size, createdAt },
+        });
         return documentToDb;
     }
 

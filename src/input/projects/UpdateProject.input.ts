@@ -1,12 +1,15 @@
-import { ArgsType, Field, ID } from 'type-graphql';
+import { ArgsType, Field, GraphQLISODateTime, ID } from 'type-graphql';
 
 @ArgsType()
 class UpdateProjectType {
     @Field(() => ID)
-    id: string
+    id: string;
 
     @Field(() => String)
-    name?: string
+    name: string;
+
+    @Field(() => GraphQLISODateTime)
+    updatedAt: Date;
 }
 
 export default UpdateProjectType;
