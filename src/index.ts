@@ -5,9 +5,10 @@ import * as Express from 'express';
 import { createServer } from 'http';
 import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
-import "reflect-metadata";
+import 'reflect-metadata';
 import { buildSchemaSync } from 'type-graphql';
-import UserResolver from "./resolvers/User.resolver";
+import UserResolver from './resolvers/User.resolver';
+import NotificationResolver from './resolvers/Notification.resolver';
 
 const prisma = new PrismaClient();
 
@@ -19,7 +20,7 @@ const main = async () => {
   const httpServer = createServer(app);
 
   const schema = buildSchemaSync({
-    resolvers: [UserResolver],
+    resolvers: [UserResolver, NotificationResolver],
   });
 
   // Init apollo server

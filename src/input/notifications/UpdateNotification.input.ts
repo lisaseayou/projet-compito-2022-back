@@ -1,12 +1,18 @@
-import { ArgsType, Field, ID } from 'type-graphql';
+import { ArgsType, Field, GraphQLISODateTime, ID } from 'type-graphql';
 
 @ArgsType()
 class UpdateNotificationType {
     @Field(() => ID)
-    id: string
+    id: string;
 
-    @Field(() => Boolean)
-    isRead?: boolean
+    @Field(() => String, { nullable: true })
+    description?: string;
+
+    @Field(() => Boolean, { nullable: true })
+    isRead?: boolean;
+
+    @Field(() => GraphQLISODateTime, { nullable: true })
+    createdAt?: Date;
 }
 
 export default UpdateNotificationType;
