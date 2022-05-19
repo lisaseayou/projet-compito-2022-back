@@ -12,6 +12,7 @@ import NotificationResolver from './resolvers/Notification.resolver';
 import DocumentResolver from './resolvers/Document.resolver';
 import ProjectResolver from './resolvers/Project.resolver';
 import CommentResolver from './resolvers/Comment.resolver';
+import TaskResolver from './resolvers/Task.resolver';
 
 const prisma = new PrismaClient();
 
@@ -29,6 +30,7 @@ const main = async () => {
             DocumentResolver,
             ProjectResolver,
             CommentResolver,
+            TaskResolver,
         ],
     });
 

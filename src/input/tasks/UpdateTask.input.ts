@@ -1,24 +1,27 @@
-import {ArgsType, Field, ID, Int} from 'type-graphql';
+import { ArgsType, Field, GraphQLISODateTime, ID, Int } from 'type-graphql';
 
 @ArgsType()
 class UpdateTaskType {
     @Field(() => ID)
-    id: string
+    id: string;
 
-    @Field(() => String)
-    subject?: string
+    @Field(() => String, { nullable: true })
+    subject?: string;
 
-    @Field(() => String)
-    status?: string
+    @Field(() => String, { nullable: true })
+    status?: string;
 
-    @Field(() => String)
-    dueDate?: string
+    @Field(() => String, { nullable: true })
+    dueDate?: string;
 
-    @Field(() => [Int])
-    additionalSpentTime?: [number]
+    @Field(() => [Int], { nullable: true })
+    additionalSpentTime?: [number];
 
-    @Field(() => Int)
-    advancement?: number
+    @Field(() => Int, { nullable: true })
+    advancement?: number;
+
+    @Field(() => GraphQLISODateTime)
+    updatedAt: Date;
 }
 
 export default UpdateTaskType;
