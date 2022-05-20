@@ -23,6 +23,8 @@ model Comment {
   comment       String
   createdAt     DateTime
   updatedAt     DateTime
+  task          Task @relation("CommentsByTask", fields: [taskID], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  taskID        String @db.Uuid
 }
 
 model Document {
@@ -30,6 +32,8 @@ model Document {
   name          String
   size          Int
   createdAt     DateTime
+  task          Task @relation("DocumentsByTask", fields: [taskID], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  taskID        String @db.Uuid
 }
 
 model Notification {
@@ -49,6 +53,7 @@ model Project {
   name          String
   createdAt     DateTime
   updatedAt     DateTime
+  tasks         Task[] @relation("tasksByProjet")
 }
 
 model Task {
@@ -61,4 +66,8 @@ model Task {
   advancement           Int
   createdAt             DateTime
   updatedAt             DateTime
+  documents             Document[] @relation("DocumentsByTask")
+  comments              Comment[] @relation("CommentsByTask")
+  project               Project @relation("tasksByProjet", fields: [projectID], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  projectID             String @db.Uuid
 }
