@@ -12,6 +12,7 @@ class TaskResolver {
             include: {
                 project: true,
                 comments: true,
+                documents: true,
             },
         });
     }
@@ -49,6 +50,7 @@ class TaskResolver {
             include: {
                 project: true,
                 comments: true,
+                documents: true,
             },
         });
         return taskToDb;
@@ -67,6 +69,7 @@ class TaskResolver {
             include: {
                 project: true,
                 comments: true,
+                documents: true,
             },
         });
         return currentTask;
@@ -108,6 +111,7 @@ class TaskResolver {
             include: {
                 project: true,
                 comments: true,
+                documents: true,
             },
         });
 
