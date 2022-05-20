@@ -1,4 +1,6 @@
 import { ObjectType, Field, ID, GraphQLISODateTime } from 'type-graphql';
+// eslint-disable-next-line import/no-cycle
+import Notification from './Notification.model';
 
 @ObjectType()
 class User {
@@ -22,6 +24,9 @@ class User {
 
     @Field(() => GraphQLISODateTime)
     updatedAt: Date;
+
+    @Field(() => [Notification], { nullable: true })
+    notifications?: Notification[];
 }
 
 export default User;

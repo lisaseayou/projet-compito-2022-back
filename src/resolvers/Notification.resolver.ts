@@ -8,16 +8,32 @@ import UpdateNotificationType from '../input/notifications/UpdateNotification.in
 class NotificationResolver {
     @Query(() => [Notification, Query])
     async allNotifications(@Ctx() ctx: { prisma: any }) {
-        return ctx.prisma.notification.findMany();
+        return ctx.prisma.notification.findMany({
+            include: {
+                user: true,
+            },
+        });
     }
 
     @Mutation(() => Notification)
     async addNotification(
-        @Args() { description, isRead, createdAt }: AddNotificationType,
+        @Args() { description, isRead, createdAt, userId }: AddNotificationType,
         @Ctx() ctx: { prisma: any }
     ) {
         const notificationToDb = await ctx.prisma.notification.create({
-            data: { description, isRead, createdAt },
+            data: {
+                description,
+                isRead,
+                createdAt,
+                user: {
+                    connect: {
+                        id: userId,
+                    },
+                },
+            },
+            include: {
+                user: true,
+            },
         });
         return notificationToDb;
     }
@@ -29,13 +45,16 @@ class NotificationResolver {
     ) {
         const currentNotification = ctx.prisma.notification.delete({
             where: { id },
+            include: {
+                user: true,
+            },
         });
         return currentNotification;
     }
 
     @Mutation(() => Notification)
     async updateNotification(
-        @Args() { id, description, isRead, createdAt }: UpdateNotificationType,
+        @Args() { id, description, isRead, userId }: UpdateNotificationType,
         @Ctx() ctx: { prisma: any }
     ) {
         const notifToUpdate = ctx.prisma.notification.findUnique({
@@ -47,7 +66,14 @@ class NotificationResolver {
             data: {
                 description: description ?? notifToUpdate.description,
                 isRead: isRead ?? notifToUpdate.isRead,
-                createdAt: createdAt ?? notifToUpdate.createdAt,
+                user: {
+                    connect: {
+                        id: userId,
+                    },
+                },
+            },
+            include: {
+                user: true,
             },
         });
 

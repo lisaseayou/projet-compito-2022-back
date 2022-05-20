@@ -8,7 +8,11 @@ import UpdateUserType from '../input/users/UpdateUser.input';
 class UserResolver {
     @Query(() => [User, Query])
     async allUsers(@Ctx() ctx: { prisma: any }) {
-        return ctx.prisma.user.findMany();
+        return ctx.prisma.user.findMany({
+            include: {
+                notifications: true,
+            },
+        });
     }
 
     @Mutation(() => User)
@@ -18,7 +22,14 @@ class UserResolver {
         @Ctx() ctx: { prisma: any }
     ) {
         const userToDb = await ctx.prisma.user.create({
-            data: { name, email, roles, password, createdAt, updatedAt },
+            data: {
+                name,
+                email,
+                roles,
+                password,
+                createdAt,
+                updatedAt,
+            },
         });
         return userToDb;
     }
@@ -28,7 +39,13 @@ class UserResolver {
         @Args() { id }: DeleteUserType,
         @Ctx() ctx: { prisma: any }
     ) {
-        const currentUser = ctx.prisma.user.delete({ where: { id } });
+        const currentUser = ctx.prisma.user.delete({
+            where: { id },
+            include: {
+                notifications: true,
+            },
+        });
+
         return currentUser;
     }
 
@@ -49,6 +66,9 @@ class UserResolver {
                 roles: userToUpdate.roles ?? roles,
                 password: userToUpdate.password ?? password,
                 updatedAt: userToUpdate.updatedAt ?? updatedAt,
+            },
+            include: {
+                notifications: true,
             },
         });
         return userUpdated;
