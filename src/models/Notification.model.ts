@@ -1,18 +1,23 @@
-import {ObjectType, Field, ID, GraphQLISODateTime} from 'type-graphql';
+import { ObjectType, Field, ID, GraphQLISODateTime } from 'type-graphql';
+// eslint-disable-next-line import/no-cycle
+import User from './User.model';
 
 @ObjectType()
 class Notification {
     @Field(() => ID)
-    id: string
+    id: string;
 
     @Field(() => String)
-    description: string
+    description: string;
 
     @Field(() => Boolean)
-    isRead: boolean
+    isRead: boolean;
 
     @Field(() => GraphQLISODateTime)
-    createdAt: Date
+    createdAt: Date;
+
+    @Field(() => User)
+    user: User;
 }
 
-export default Notification
+export default Notification;

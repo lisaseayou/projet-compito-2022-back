@@ -6,15 +6,23 @@ import UpdateProjectType from '../input/projects/UpdateProject.input';
 
 @Resolver(Project)
 class ProjectResolver {
-
     @Query(() => [Project, Query])
     async allProjects(@Ctx() ctx: { prisma: any }) {
-        return ctx.prisma.project.findMany();
+        return ctx.prisma.project.findMany({
+            include: {
+                tasks: true,
+            },
+        });
     }
 
     @Mutation(() => Project)
-    async addProject(@Args() { name }: AddProjectType, @Ctx() ctx: { prisma: any }) {
-        const projectToDb = await ctx.prisma.project.create({ data: { name } });
+    async addProject(
+        @Args() { name, createdAt, updatedAt }: AddProjectType,
+        @Ctx() ctx: { prisma: any }
+    ) {
+        const projectToDb = await ctx.prisma.project.create({
+            data: { name, createdAt, updatedAt },
+        });
         return projectToDb;
     }
 
@@ -23,20 +31,31 @@ class ProjectResolver {
         @Args() { id }: DeleteProjectType,
         @Ctx() ctx: { prisma: any }
     ) {
-        const currentProject = ctx.prisma.project.delete({ where: { id } });
+        const currentProject = ctx.prisma.project.delete({
+            where: { id },
+            include: {
+                tasks: true,
+            },
+        });
         return currentProject;
     }
 
     @Mutation(() => Project)
     async updateProject(
-        @Args() { id, name }: UpdateProjectType,
+        @Args() { id, name, updatedAt }: UpdateProjectType,
         @Ctx() ctx: { prisma: any }
     ) {
-        const projectToUpdate = ctx.prisma.project.update({
+        const projectUpdated = ctx.prisma.project.update({
             where: { id },
-            data: { name },
+            data: {
+                name,
+                updatedAt,
+            },
+            include: {
+                tasks: true,
+            },
         });
-        return projectToUpdate;
+        return projectUpdated;
     }
 }
 

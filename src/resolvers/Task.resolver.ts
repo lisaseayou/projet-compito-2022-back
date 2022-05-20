@@ -6,37 +6,112 @@ import UpdateTaskType from '../input/tasks/UpdateTask.input';
 
 @Resolver(Task)
 class TaskResolver {
-
     @Query(() => [Task, Query])
     async allTasks(@Ctx() ctx: { prisma: any }) {
-        return ctx.prisma.task.findMany();
+        return ctx.prisma.task.findMany({
+            include: {
+                project: true,
+                comments: true,
+            },
+        });
     }
 
     @Mutation(() => Task)
-    async addTask(@Args() { subject }: AddTaskType, @Ctx() ctx: { prisma: any }) {
-        const taskToDb = await ctx.prisma.task.create({ data: { subject } });
+    async addTask(
+        @Args()
+        {
+            subject,
+            status,
+            dueDate,
+            initialSpentTime,
+            additionalSpentTime,
+            advancement,
+            createdAt,
+            updatedAt,
+            projectId,
+        }: AddTaskType,
+        @Ctx() ctx: { prisma: any }
+    ) {
+        const taskToDb = await ctx.prisma.task.create({
+            data: {
+                subject,
+                status,
+                dueDate,
+                initialSpentTime,
+                additionalSpentTime,
+                advancement,
+                createdAt,
+                updatedAt,
+                project: {
+                    connect: { id: projectId },
+                },
+            },
+            include: {
+                project: true,
+                comments: true,
+            },
+        });
         return taskToDb;
     }
 
     @Mutation(() => Task)
     async deleteTask(
-        @Args() { id }: DeleteTaskType,
+        @Args()
+        { id }: DeleteTaskType,
         @Ctx() ctx: { prisma: any }
     ) {
-        const currentTask = ctx.prisma.task.delete({ where: { id } });
+        const currentTask = ctx.prisma.task.delete({
+            where: {
+                id,
+            },
+            include: {
+                project: true,
+                comments: true,
+            },
+        });
         return currentTask;
     }
 
     @Mutation(() => Task)
     async updateTask(
-        @Args() { id, subject, status, dueDate, additionalSpentTime, advancement }: UpdateTaskType,
+        @Args()
+        {
+            id,
+            subject,
+            status,
+            dueDate,
+            additionalSpentTime,
+            advancement,
+            updatedAt,
+            projectId,
+        }: UpdateTaskType,
         @Ctx() ctx: { prisma: any }
     ) {
-        const taskToUpdate = ctx.prisma.task.update({
+        const taskToUpdate = ctx.prisma.task.findUnique({
             where: { id },
-            data: { subject, status, dueDate, additionalSpentTime, advancement },
         });
-        return taskToUpdate;
+
+        const taskUpdated = ctx.prisma.task.update({
+            where: { id },
+            data: {
+                subject: taskToUpdate.subject ?? subject,
+                status: taskToUpdate.status ?? status,
+                dueDate: taskToUpdate.dueDate ?? dueDate,
+                additionalSpentTime:
+                    taskToUpdate.additionalSpentTime ?? additionalSpentTime,
+                advancement: taskToUpdate.advancement ?? advancement,
+                updatedAt,
+                project: {
+                    connect: { id: projectId },
+                },
+            },
+            include: {
+                project: true,
+                comments: true,
+            },
+        });
+
+        return taskUpdated;
     }
 }
 

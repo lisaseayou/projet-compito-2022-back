@@ -10,6 +10,9 @@ class AddNotificationInput {
 
     @Field(() => GraphQLISODateTime)
     createdAt: Date;
+
+    @Field(() => String)
+    userId: string;
 }
 
 export default AddNotificationInput;
