@@ -22,6 +22,9 @@ class UpdateTaskType {
 
     @Field(() => GraphQLISODateTime)
     updatedAt: Date;
+
+    @Field(() => String)
+    projectId: string;
 }
 
 export default UpdateTaskType;

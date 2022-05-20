@@ -8,7 +8,11 @@ import UpdateProjectType from '../input/projects/UpdateProject.input';
 class ProjectResolver {
     @Query(() => [Project, Query])
     async allProjects(@Ctx() ctx: { prisma: any }) {
-        return ctx.prisma.project.findMany();
+        return ctx.prisma.project.findMany({
+            include: {
+                tasks: true,
+            },
+        });
     }
 
     @Mutation(() => Project)
@@ -27,7 +31,12 @@ class ProjectResolver {
         @Args() { id }: DeleteProjectType,
         @Ctx() ctx: { prisma: any }
     ) {
-        const currentProject = ctx.prisma.project.delete({ where: { id } });
+        const currentProject = ctx.prisma.project.delete({
+            where: { id },
+            include: {
+                tasks: true,
+            },
+        });
         return currentProject;
     }
 
@@ -41,6 +50,9 @@ class ProjectResolver {
             data: {
                 name,
                 updatedAt,
+            },
+            include: {
+                tasks: true,
             },
         });
         return projectUpdated;

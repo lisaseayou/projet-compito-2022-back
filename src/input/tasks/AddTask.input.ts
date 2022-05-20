@@ -25,6 +25,9 @@ class AddTaskInput {
 
     @Field(() => GraphQLISODateTime)
     updatedAt: Date;
+
+    @Field(() => String, { nullable: true })
+    projectId?: string;
 }
 
 export default AddTaskInput;

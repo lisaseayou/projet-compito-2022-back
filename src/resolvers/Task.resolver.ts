@@ -8,7 +8,11 @@ import UpdateTaskType from '../input/tasks/UpdateTask.input';
 class TaskResolver {
     @Query(() => [Task, Query])
     async allTasks(@Ctx() ctx: { prisma: any }) {
-        return ctx.prisma.task.findMany();
+        return ctx.prisma.task.findMany({
+            include: {
+                project: true,
+            },
+        });
     }
 
     @Mutation(() => Task)
@@ -23,6 +27,7 @@ class TaskResolver {
             advancement,
             createdAt,
             updatedAt,
+            projectId,
         }: AddTaskType,
         @Ctx() ctx: { prisma: any }
     ) {
@@ -36,6 +41,9 @@ class TaskResolver {
                 advancement,
                 createdAt,
                 updatedAt,
+                project: {
+                    connect: { id: projectId },
+                },
             },
         });
         return taskToDb;
@@ -50,6 +58,9 @@ class TaskResolver {
         const currentTask = ctx.prisma.task.delete({
             where: {
                 id,
+            },
+            include: {
+                project: true,
             },
         });
         return currentTask;
@@ -66,6 +77,7 @@ class TaskResolver {
             additionalSpentTime,
             advancement,
             updatedAt,
+            projectId,
         }: UpdateTaskType,
         @Ctx() ctx: { prisma: any }
     ) {
@@ -83,6 +95,12 @@ class TaskResolver {
                     taskToUpdate.additionalSpentTime ?? additionalSpentTime,
                 advancement: taskToUpdate.advancement ?? advancement,
                 updatedAt,
+                project: {
+                    connect: { id: projectId },
+                },
+            },
+            include: {
+                project: true,
             },
         });
 

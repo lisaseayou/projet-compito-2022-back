@@ -1,37 +1,46 @@
-import {ObjectType, Field, ID, Int, GraphQLISODateTime} from 'type-graphql';
+/* eslint-disable import/no-cycle */
+import { ObjectType, Field, ID, Int, GraphQLISODateTime } from 'type-graphql';
+// import Document from './Document.model';
+import Project from './Project.model';
 
 @ObjectType()
 class Task {
     @Field(() => ID)
-    id: string
+    id: string;
 
     @Field(() => String)
-    subject: string
+    subject: string;
 
     @Field(() => String)
-    status: string
+    status: string;
 
     @Field(() => String)
-    dueDate: string
+    dueDate: string;
 
     @Field(() => Int)
-    initialSpentTime: number
+    initialSpentTime: number;
 
     @Field(() => [Int])
-    additionalSpentTime: [number]
+    additionalSpentTime: [number];
 
     @Field(() => Int)
-    advancement: number
+    advancement: number;
 
     @Field(() => GraphQLISODateTime)
-    createdAt: Date
+    createdAt: Date;
 
     @Field(() => GraphQLISODateTime)
-    updatedAt: Date
+    updatedAt: Date;
+
+    @Field(() => Project)
+    project: Project;
+
+    // @Field(() => [Document], { nullable: true })
+    // documents?: Document[];
     /*
     @Field(() => User)
     assignedUser: User
      */
 }
 
-export default Task
+export default Task;
