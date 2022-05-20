@@ -36,8 +36,8 @@ class Task {
     @Field(() => Project, { nullable: true })
     project: Project;
 
-    @Field(() => Comment, { nullable: true })
-    comments?: Comment;
+    @Field(() => [Comment], { nullable: true })
+    comments?: Comment[];
 
     // @Field(() => [Document], { nullable: true })
     // documents?: Document[];

@@ -46,6 +46,10 @@ class TaskResolver {
                     connect: { id: projectId },
                 },
             },
+            include: {
+                project: true,
+                comments: true,
+            },
         });
         return taskToDb;
     }
