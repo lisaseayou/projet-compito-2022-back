@@ -8,16 +8,30 @@ import UpdateCommentType from '../input/comments/UpdateComment.input';
 class CommentResolver {
     @Query(() => [Comment, Query])
     async allComments(@Ctx() ctx: { prisma: any }) {
-        return ctx.prisma.comment.findMany();
+        return ctx.prisma.comment.findMany({
+            include: {
+                task: true,
+            },
+        });
     }
 
     @Mutation(() => Comment)
     async addComment(
-        @Args() { comment, createdAt, updatedAt }: AddCommentType,
+        @Args() { comment, createdAt, updatedAt, taskId }: AddCommentType,
         @Ctx() ctx: { prisma: any }
     ) {
         const commentToDb = await ctx.prisma.comment.create({
-            data: { comment, createdAt, updatedAt },
+            data: {
+                comment,
+                createdAt,
+                updatedAt,
+                task: {
+                    connect: { id: taskId },
+                },
+            },
+            include: {
+                task: true,
+            },
         });
         return commentToDb;
     }
@@ -27,13 +41,18 @@ class CommentResolver {
         @Args() { id }: DeleteCommentType,
         @Ctx() ctx: { prisma: any }
     ) {
-        const currentComment = ctx.prisma.comment.delete({ where: { id } });
+        const currentComment = ctx.prisma.comment.delete({
+            where: { id },
+            include: {
+                task: true,
+            },
+        });
         return currentComment;
     }
 
     @Mutation(() => Comment)
     async updateComment(
-        @Args() { id, comment, updatedAt }: UpdateCommentType,
+        @Args() { id, comment, updatedAt, taskId }: UpdateCommentType,
         @Ctx() ctx: { prisma: any }
     ) {
         const commentUpdated = ctx.prisma.comment.update({
@@ -41,6 +60,14 @@ class CommentResolver {
             data: {
                 comment,
                 updatedAt,
+                task: {
+                    connect: {
+                        id: taskId,
+                    },
+                },
+            },
+            include: {
+                task: true,
             },
         });
         return commentUpdated;

@@ -23,8 +23,8 @@ model Comment {
   comment       String
   createdAt     DateTime
   updatedAt     DateTime
-  // task          Task @relation("CommentsByTask", fields: [taskID], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  // taskID        String @db.Uuid
+  task          Task @relation("CommentsByTask", fields: [taskID], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  taskID        String @db.Uuid
 }
 
 model Document {
@@ -67,7 +67,7 @@ model Task {
   createdAt             DateTime
   updatedAt             DateTime
   // documents             Document[] @relation("DocumentsByTask")
-  // comments              Comment[] @relation("CommentsByTask")
+  comments              Comment[] @relation("CommentsByTask")
   project               Project @relation("tasksByProjet", fields: [projectID], references: [id], onDelete: Cascade, onUpdate: Cascade)
   projectID             String @db.Uuid
 }

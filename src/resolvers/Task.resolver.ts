@@ -11,6 +11,7 @@ class TaskResolver {
         return ctx.prisma.task.findMany({
             include: {
                 project: true,
+                comments: true,
             },
         });
     }
@@ -61,6 +62,7 @@ class TaskResolver {
             },
             include: {
                 project: true,
+                comments: true,
             },
         });
         return currentTask;
@@ -101,6 +103,7 @@ class TaskResolver {
             },
             include: {
                 project: true,
+                comments: true,
             },
         });
 

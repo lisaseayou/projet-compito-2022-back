@@ -10,6 +10,9 @@ class AddCommentInput {
 
     @Field(() => GraphQLISODateTime)
     updatedAt: Date;
+
+    @Field(() => String, { nullable: true })
+    taskId?: string;
 }
 
 export default AddCommentInput;

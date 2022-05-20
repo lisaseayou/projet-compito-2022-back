@@ -10,6 +10,9 @@ class UpdateCommentType {
 
     @Field(() => GraphQLISODateTime)
     updatedAt: Date;
+
+    @Field(() => String, { nullable: true })
+    taskId?: string;
 }
 
 export default UpdateCommentType;
