@@ -1,6 +1,7 @@
+/* eslint-disable import/no-cycle */
 import { ObjectType, Field, ID, GraphQLISODateTime } from 'type-graphql';
-// eslint-disable-next-line import/no-cycle
 import Task from './Task.model';
+import User from './User.model';
 
 @ObjectType()
 class Project {
@@ -18,6 +19,9 @@ class Project {
 
     @Field(() => [Task], { nullable: true })
     tasks?: Task[];
+
+    @Field(() => [User], { nullable: true })
+    users?: User[];
 }
 
 export default Project;

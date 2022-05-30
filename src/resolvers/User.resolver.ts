@@ -11,6 +11,7 @@ class UserResolver {
         return ctx.prisma.user.findMany({
             include: {
                 notifications: true,
+                projects: true,
             },
         });
     }
@@ -30,6 +31,10 @@ class UserResolver {
                 createdAt,
                 updatedAt,
             },
+            include: {
+                notifications: true,
+                projects: true,
+            },
         });
         return userToDb;
     }
@@ -43,6 +48,7 @@ class UserResolver {
             where: { id },
             include: {
                 notifications: true,
+                projects: true,
             },
         });
 
@@ -69,6 +75,7 @@ class UserResolver {
             },
             include: {
                 notifications: true,
+                projects: true,
             },
         });
         return userUpdated;

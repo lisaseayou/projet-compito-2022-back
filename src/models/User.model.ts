@@ -1,6 +1,8 @@
+/* eslint-disable import/no-cycle */
 import { ObjectType, Field, ID, GraphQLISODateTime } from 'type-graphql';
-// eslint-disable-next-line import/no-cycle
+
 import Notification from './Notification.model';
+import Project from './Project.model';
 
 @ObjectType()
 class User {
@@ -27,6 +29,9 @@ class User {
 
     @Field(() => [Notification], { nullable: true })
     notifications?: Notification[];
+
+    @Field(() => [Project], { nullable: true })
+    projects?: Project[];
 }
 
 export default User;
