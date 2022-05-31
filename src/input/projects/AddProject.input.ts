@@ -10,6 +10,9 @@ class AddProjectInput {
 
     @Field(() => GraphQLISODateTime)
     updatedAt: Date;
+
+    @Field(() => String)
+    userId: string;
 }
 
 export default AddProjectInput;

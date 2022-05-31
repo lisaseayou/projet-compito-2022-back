@@ -10,6 +10,9 @@ class UpdateProjectType {
 
     @Field(() => GraphQLISODateTime)
     updatedAt: Date;
+
+    @Field(() => String, { nullable: true })
+    userId?: string;
 }
 
 export default UpdateProjectType;

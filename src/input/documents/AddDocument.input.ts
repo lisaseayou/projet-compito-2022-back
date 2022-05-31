@@ -11,8 +11,8 @@ class AddDocumentInput {
     @Field(() => GraphQLISODateTime)
     createdAt: Date;
 
-    // @Field(() => String)
-    // taskId: string;
+    @Field(() => String)
+    taskId: string;
 }
 
 export default AddDocumentInput;

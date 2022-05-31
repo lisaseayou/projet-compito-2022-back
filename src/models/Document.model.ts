@@ -1,6 +1,6 @@
 import { ObjectType, Field, ID, Int, GraphQLISODateTime } from 'type-graphql';
 // eslint-disable-next-line import/no-cycle
-// import Task from './Task.model';
+import Task from './Task.model';
 
 @ObjectType()
 class Document {
@@ -16,8 +16,8 @@ class Document {
     @Field(() => GraphQLISODateTime)
     createdAt: Date;
 
-    // @Field(() => Task)
-    // task: Task;
+    @Field(() => Task)
+    task: Task;
 }
 
 export default Document;

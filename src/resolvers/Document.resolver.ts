@@ -7,16 +7,30 @@ import DeleteDocumentType from '../input/Delete.input';
 class DocumentResolver {
     @Query(() => [Document, Query])
     async allDocuments(@Ctx() ctx: { prisma: any }) {
-        return ctx.prisma.document.findMany();
+        return ctx.prisma.document.findMany({
+            include: {
+                task: true,
+            },
+        });
     }
 
     @Mutation(() => Document)
     async addDocument(
-        @Args() { name, size, createdAt }: AddDocumentType,
+        @Args() { name, size, createdAt, taskId }: AddDocumentType,
         @Ctx() ctx: { prisma: any }
     ) {
         const documentToDb = await ctx.prisma.document.create({
-            data: { name, size, createdAt },
+            data: {
+                name,
+                size,
+                createdAt,
+                task: {
+                    connect: { id: taskId },
+                },
+            },
+            include: {
+                task: true,
+            },
         });
         return documentToDb;
     }
@@ -26,7 +40,12 @@ class DocumentResolver {
         @Args() { id }: DeleteDocumentType,
         @Ctx() ctx: { prisma: any }
     ) {
-        const currentDocument = ctx.prisma.document.delete({ where: { id } });
+        const currentDocument = ctx.prisma.document.delete({
+            where: { id },
+            include: {
+                task: true,
+            },
+        });
         return currentDocument;
     }
 }

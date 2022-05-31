@@ -11,18 +11,31 @@ class ProjectResolver {
         return ctx.prisma.project.findMany({
             include: {
                 tasks: true,
+                users: true,
             },
         });
     }
 
     @Mutation(() => Project)
     async addProject(
-        @Args() { name, createdAt, updatedAt }: AddProjectType,
+        @Args() { name, createdAt, updatedAt, userId }: AddProjectType,
         @Ctx() ctx: { prisma: any }
     ) {
         const projectToDb = await ctx.prisma.project.create({
-            data: { name, createdAt, updatedAt },
+            data: {
+                name,
+                createdAt,
+                updatedAt,
+                users: {
+                    connect: [{ id: userId }],
+                },
+            },
+            include: {
+                tasks: true,
+                users: true,
+            },
         });
+
         return projectToDb;
     }
 
@@ -35,6 +48,7 @@ class ProjectResolver {
             where: { id },
             include: {
                 tasks: true,
+                users: true,
             },
         });
         return currentProject;
@@ -42,7 +56,7 @@ class ProjectResolver {
 
     @Mutation(() => Project)
     async updateProject(
-        @Args() { id, name, updatedAt }: UpdateProjectType,
+        @Args() { id, name, updatedAt, userId }: UpdateProjectType,
         @Ctx() ctx: { prisma: any }
     ) {
         const projectUpdated = ctx.prisma.project.update({
@@ -50,9 +64,15 @@ class ProjectResolver {
             data: {
                 name,
                 updatedAt,
+                users: userId
+                    ? {
+                          connect: [{ id: userId }],
+                      }
+                    : {},
             },
             include: {
                 tasks: true,
+                users: true,
             },
         });
         return projectUpdated;

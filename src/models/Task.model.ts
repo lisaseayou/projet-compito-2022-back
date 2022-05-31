@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
 import { ObjectType, Field, ID, Int, GraphQLISODateTime } from 'type-graphql';
 import Comment from './Comment.model';
-// import Document from './Document.model';
+import Document from './Document.model';
 import Project from './Project.model';
 
 @ObjectType()
@@ -39,8 +39,8 @@ class Task {
     @Field(() => [Comment], { nullable: true })
     comments?: Comment[];
 
-    // @Field(() => [Document], { nullable: true })
-    // documents?: Document[];
+    @Field(() => [Document], { nullable: true })
+    documents?: Document[];
     /*
     @Field(() => User)
     assignedUser: User

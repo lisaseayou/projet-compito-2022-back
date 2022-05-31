@@ -16,6 +16,7 @@ model User {
   createdAt DateTime
   updatedAt DateTime
   notifications Notification[] @relation("NotifsByUser")
+  projects      Project[]
 }
 
 model Comment {
@@ -32,8 +33,8 @@ model Document {
   name          String
   size          Int
   createdAt     DateTime
-  // task          Task @relation("DocumentsByTask", fields: [taskID], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  // taskID        String @db.Uuid
+  task          Task @relation("DocumentsByTask", fields: [taskID], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  taskID        String @db.Uuid
 }
 
 model Notification {
@@ -45,15 +46,13 @@ model Notification {
   userID        String @db.Uuid
 }
 
-// author   User @relation(fields: [authorId], references: [id])
-// authorId Int
-
 model Project {
   id            String    @id @unique @default(uuid()) @db.Uuid
   name          String
   createdAt     DateTime
   updatedAt     DateTime
   tasks         Task[] @relation("tasksByProjet")
+  users         User[]
 }
 
 model Task {
@@ -66,7 +65,7 @@ model Task {
   advancement           Int
   createdAt             DateTime
   updatedAt             DateTime
-  // documents             Document[] @relation("DocumentsByTask")
+  documents             Document[] @relation("DocumentsByTask")
   comments              Comment[] @relation("CommentsByTask")
   project               Project @relation("tasksByProjet", fields: [projectID], references: [id], onDelete: Cascade, onUpdate: Cascade)
   projectID             String @db.Uuid
