@@ -1,19 +1,19 @@
 import { Resolver, Query, Ctx, Mutation, Args } from 'type-graphql';
+import { Service } from 'typedi';
 import Comment from '../models/Comment.model';
 import AddCommentType from '../input/comments/AddComment.input';
 import DeleteCommentType from '../input/Delete.input';
 import UpdateCommentType from '../input/comments/UpdateComment.input';
+import CommentService from '../services/Comment.service';
 
+@Service()
 @Resolver(Comment)
 class CommentResolver {
+    constructor(private readonly commentService: CommentService) {}
+
     @Query(() => [Comment, Query])
     async allComments(@Ctx() ctx: { prisma: any }) {
-        return ctx.prisma.comment.findMany({
-            include: {
-                task: true,
-                user: true,
-            },
-        });
+        return this?.commentService?.findAll(ctx);
     }
 
     @Mutation(() => Comment)
@@ -22,22 +22,7 @@ class CommentResolver {
         { comment, taskId, userId }: AddCommentType,
         @Ctx() ctx: { prisma: any }
     ) {
-        const commentToDb = await ctx.prisma.comment.create({
-            data: {
-                comment,
-                task: {
-                    connect: { id: taskId },
-                },
-                user: {
-                    connect: { id: userId },
-                },
-            },
-            include: {
-                task: true,
-                user: true,
-            },
-        });
-        return commentToDb;
+        return this?.commentService?.save(ctx, comment, userId, taskId);
     }
 
     @Mutation(() => Comment)
@@ -45,14 +30,7 @@ class CommentResolver {
         @Args() { id }: DeleteCommentType,
         @Ctx() ctx: { prisma: any }
     ) {
-        const currentComment = ctx.prisma.comment.delete({
-            where: { id },
-            include: {
-                task: true,
-                user: true,
-            },
-        });
-        return currentComment;
+        return this?.commentService?.deleteOne(ctx, id);
     }
 
     @Mutation(() => Comment)
@@ -60,31 +38,13 @@ class CommentResolver {
         @Args() { id, comment, taskId, userId }: UpdateCommentType,
         @Ctx() ctx: { prisma: any }
     ) {
-        const commentToUpdate = ctx.prisma.comment.findUnique({
-            where: { id },
-        });
-
-        const commentUpdated = ctx.prisma.comment.update({
-            where: { id },
-            data: {
-                comment: comment ?? commentToUpdate?.comment,
-                task: {
-                    connect: {
-                        id: taskId,
-                    },
-                },
-                user: {
-                    connect: {
-                        id: userId,
-                    },
-                },
-            },
-            include: {
-                task: true,
-                user: true,
-            },
-        });
-        return commentUpdated;
+        return this?.commentService?.updateOne(
+            ctx,
+            id,
+            comment,
+            taskId,
+            userId
+        );
     }
 }
 
