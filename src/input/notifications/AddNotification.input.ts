@@ -1,4 +1,4 @@
-import { ArgsType, Field, GraphQLISODateTime } from 'type-graphql';
+import { ArgsType, Field } from 'type-graphql';
 
 @ArgsType()
 class AddNotificationInput {
@@ -7,9 +7,6 @@ class AddNotificationInput {
 
     @Field(() => Boolean)
     isRead: boolean;
-
-    @Field(() => GraphQLISODateTime)
-    createdAt: Date;
 
     @Field(() => String)
     userId: string;

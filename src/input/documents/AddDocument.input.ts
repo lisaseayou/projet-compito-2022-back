@@ -1,4 +1,4 @@
-import { ArgsType, Field, GraphQLISODateTime, Int } from 'type-graphql';
+import { ArgsType, Field, Int } from 'type-graphql';
 
 @ArgsType()
 class AddDocumentInput {
@@ -7,9 +7,6 @@ class AddDocumentInput {
 
     @Field(() => Int)
     size: number;
-
-    @Field(() => GraphQLISODateTime)
-    createdAt: Date;
 
     @Field(() => String)
     taskId: string;

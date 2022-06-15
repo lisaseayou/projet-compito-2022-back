@@ -1,41 +1,32 @@
 import { Resolver, Query, Ctx, Mutation, Args } from 'type-graphql';
+import { Service } from 'typedi';
 import Notification from '../models/Notification.model';
 import AddNotificationType from '../input/notifications/AddNotification.input';
 import DeleteNotificationType from '../input/Delete.input';
 import UpdateNotificationType from '../input/notifications/UpdateNotification.input';
+import NotificationService from '../services/Notification.service';
 
+@Service()
 @Resolver(Notification)
 class NotificationResolver {
+    constructor(private readonly notificationService: NotificationService) {}
+
     @Query(() => [Notification, Query])
     async allNotifications(@Ctx() ctx: { prisma: any }) {
-        return ctx.prisma.notification.findMany({
-            include: {
-                user: true,
-            },
-        });
+        return this?.notificationService?.findAll(ctx);
     }
 
     @Mutation(() => Notification)
     async addNotification(
-        @Args() { description, isRead, createdAt, userId }: AddNotificationType,
+        @Args() { description, isRead, userId }: AddNotificationType,
         @Ctx() ctx: { prisma: any }
     ) {
-        const notificationToDb = await ctx.prisma.notification.create({
-            data: {
-                description,
-                isRead,
-                createdAt,
-                user: {
-                    connect: {
-                        id: userId,
-                    },
-                },
-            },
-            include: {
-                user: true,
-            },
-        });
-        return notificationToDb;
+        return this?.notificationService?.save(
+            ctx,
+            description,
+            isRead,
+            userId
+        );
     }
 
     @Mutation(() => Notification)
@@ -43,13 +34,7 @@ class NotificationResolver {
         @Args() { id }: DeleteNotificationType,
         @Ctx() ctx: { prisma: any }
     ) {
-        const currentNotification = ctx.prisma.notification.delete({
-            where: { id },
-            include: {
-                user: true,
-            },
-        });
-        return currentNotification;
+        return this?.notificationService?.deleteOne(ctx, id);
     }
 
     @Mutation(() => Notification)
@@ -57,27 +42,13 @@ class NotificationResolver {
         @Args() { id, description, isRead, userId }: UpdateNotificationType,
         @Ctx() ctx: { prisma: any }
     ) {
-        const notifToUpdate = ctx.prisma.notification.findUnique({
-            where: { id },
-        });
-
-        const notificationToUpdate = ctx.prisma.notification.update({
-            where: { id },
-            data: {
-                description: description ?? notifToUpdate.description,
-                isRead: isRead ?? notifToUpdate.isRead,
-                user: {
-                    connect: {
-                        id: userId,
-                    },
-                },
-            },
-            include: {
-                user: true,
-            },
-        });
-
-        return notificationToUpdate;
+        return this?.notificationService?.updateOne(
+            ctx,
+            id,
+            description,
+            isRead,
+            userId
+        );
     }
 }
 

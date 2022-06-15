@@ -7,12 +7,7 @@ import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
 import 'reflect-metadata';
 import { buildSchemaSync } from 'type-graphql';
-import UserResolver from './resolvers/User.resolver';
-import NotificationResolver from './resolvers/Notification.resolver';
-import DocumentResolver from './resolvers/Document.resolver';
-import ProjectResolver from './resolvers/Project.resolver';
-import CommentResolver from './resolvers/Comment.resolver';
-import TaskResolver from './resolvers/Task.resolver';
+import Container from 'typedi';
 
 const prisma = new PrismaClient();
 
@@ -24,14 +19,8 @@ const main = async () => {
     const httpServer = createServer(app);
 
     const schema = buildSchemaSync({
-        resolvers: [
-            UserResolver,
-            NotificationResolver,
-            DocumentResolver,
-            ProjectResolver,
-            CommentResolver,
-            TaskResolver,
-        ],
+        resolvers: [`${__dirname}/**/*.resolver.{ts,js}`],
+        container: Container,
     });
 
     // Init apollo server

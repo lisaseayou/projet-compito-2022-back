@@ -1,4 +1,4 @@
-import { ArgsType, Field, GraphQLISODateTime, ID } from 'type-graphql';
+import { ArgsType, Field, ID } from 'type-graphql';
 
 @ArgsType()
 class UpdateCommentType {
@@ -8,11 +8,11 @@ class UpdateCommentType {
     @Field(() => String)
     comment: string;
 
-    @Field(() => GraphQLISODateTime)
-    updatedAt: Date;
-
     @Field(() => String, { nullable: true })
     taskId?: string;
+
+    @Field(() => String)
+    userId: string;
 }
 
 export default UpdateCommentType;

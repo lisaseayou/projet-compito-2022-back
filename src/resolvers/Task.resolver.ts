@@ -1,20 +1,19 @@
 import { Resolver, Query, Ctx, Mutation, Args } from 'type-graphql';
+import { Service } from 'typedi';
 import Task from '../models/Task.model';
 import AddTaskType from '../input/tasks/AddTask.input';
 import DeleteTaskType from '../input/Delete.input';
 import UpdateTaskType from '../input/tasks/UpdateTask.input';
+import TaskService from '../services/Task.service';
 
+@Service()
 @Resolver(Task)
 class TaskResolver {
+    constructor(private readonly taskService: TaskService) {}
+
     @Query(() => [Task, Query])
     async allTasks(@Ctx() ctx: { prisma: any }) {
-        return ctx.prisma.task.findMany({
-            include: {
-                project: true,
-                comments: true,
-                documents: true,
-            },
-        });
+        return this?.taskService?.findAll(ctx);
     }
 
     @Mutation(() => Task)
@@ -27,33 +26,22 @@ class TaskResolver {
             initialSpentTime,
             additionalSpentTime,
             advancement,
-            createdAt,
-            updatedAt,
             projectId,
+            userId,
         }: AddTaskType,
         @Ctx() ctx: { prisma: any }
     ) {
-        const taskToDb = await ctx.prisma.task.create({
-            data: {
-                subject,
-                status,
-                dueDate,
-                initialSpentTime,
-                additionalSpentTime,
-                advancement,
-                createdAt,
-                updatedAt,
-                project: {
-                    connect: { id: projectId },
-                },
-            },
-            include: {
-                project: true,
-                comments: true,
-                documents: true,
-            },
-        });
-        return taskToDb;
+        return this?.taskService?.save(
+            ctx,
+            subject,
+            status,
+            dueDate,
+            initialSpentTime,
+            additionalSpentTime,
+            advancement,
+            projectId,
+            userId
+        );
     }
 
     @Mutation(() => Task)
@@ -62,17 +50,7 @@ class TaskResolver {
         { id }: DeleteTaskType,
         @Ctx() ctx: { prisma: any }
     ) {
-        const currentTask = ctx.prisma.task.delete({
-            where: {
-                id,
-            },
-            include: {
-                project: true,
-                comments: true,
-                documents: true,
-            },
-        });
-        return currentTask;
+        return this?.taskService?.deleteOne(ctx, id);
     }
 
     @Mutation(() => Task)
@@ -85,37 +63,22 @@ class TaskResolver {
             dueDate,
             additionalSpentTime,
             advancement,
-            updatedAt,
             projectId,
+            userId,
         }: UpdateTaskType,
         @Ctx() ctx: { prisma: any }
     ) {
-        const taskToUpdate = ctx.prisma.task.findUnique({
-            where: { id },
-        });
-
-        const taskUpdated = ctx.prisma.task.update({
-            where: { id },
-            data: {
-                subject: taskToUpdate.subject ?? subject,
-                status: taskToUpdate.status ?? status,
-                dueDate: taskToUpdate.dueDate ?? dueDate,
-                additionalSpentTime:
-                    taskToUpdate.additionalSpentTime ?? additionalSpentTime,
-                advancement: taskToUpdate.advancement ?? advancement,
-                updatedAt,
-                project: {
-                    connect: { id: projectId },
-                },
-            },
-            include: {
-                project: true,
-                comments: true,
-                documents: true,
-            },
-        });
-
-        return taskUpdated;
+        return this?.taskService?.updateOne(
+            ctx,
+            id,
+            subject,
+            status,
+            dueDate,
+            additionalSpentTime,
+            advancement,
+            projectId,
+            userId
+        );
     }
 }
 

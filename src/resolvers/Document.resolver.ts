@@ -1,38 +1,26 @@
 import { Resolver, Query, Ctx, Mutation, Args } from 'type-graphql';
+import { Service } from 'typedi';
 import Document from '../models/Document.model';
 import AddDocumentType from '../input/documents/AddDocument.input';
 import DeleteDocumentType from '../input/Delete.input';
+import DocumentService from '../services/Document.service';
 
+@Service()
 @Resolver(Document)
 class DocumentResolver {
+    constructor(private readonly documentService: DocumentService) {}
+
     @Query(() => [Document, Query])
     async allDocuments(@Ctx() ctx: { prisma: any }) {
-        return ctx.prisma.document.findMany({
-            include: {
-                task: true,
-            },
-        });
+        return this?.documentService?.findAll(ctx);
     }
 
     @Mutation(() => Document)
     async addDocument(
-        @Args() { name, size, createdAt, taskId }: AddDocumentType,
+        @Args() { name, size, taskId }: AddDocumentType,
         @Ctx() ctx: { prisma: any }
     ) {
-        const documentToDb = await ctx.prisma.document.create({
-            data: {
-                name,
-                size,
-                createdAt,
-                task: {
-                    connect: { id: taskId },
-                },
-            },
-            include: {
-                task: true,
-            },
-        });
-        return documentToDb;
+        return this?.documentService?.save(ctx, name, size, taskId);
     }
 
     @Mutation(() => Document)
@@ -40,13 +28,7 @@ class DocumentResolver {
         @Args() { id }: DeleteDocumentType,
         @Ctx() ctx: { prisma: any }
     ) {
-        const currentDocument = ctx.prisma.document.delete({
-            where: { id },
-            include: {
-                task: true,
-            },
-        });
-        return currentDocument;
+        return this?.documentService?.deleteOne(ctx, id);
     }
 }
 

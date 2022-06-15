@@ -1,4 +1,4 @@
-import { ArgsType, Field, GraphQLISODateTime, Int } from 'type-graphql';
+import { ArgsType, Field, Int } from 'type-graphql';
 
 @ArgsType()
 class AddTaskInput {
@@ -20,14 +20,11 @@ class AddTaskInput {
     @Field(() => Int)
     advancement: number;
 
-    @Field(() => GraphQLISODateTime)
-    createdAt: Date;
+    @Field(() => String)
+    projectId: string;
 
-    @Field(() => GraphQLISODateTime)
-    updatedAt: Date;
-
-    @Field(() => String, { nullable: true })
-    projectId?: string;
+    @Field(() => String)
+    userId: string;
 }
 
 export default AddTaskInput;

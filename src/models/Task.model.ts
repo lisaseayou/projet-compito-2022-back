@@ -3,6 +3,7 @@ import { ObjectType, Field, ID, Int, GraphQLISODateTime } from 'type-graphql';
 import Comment from './Comment.model';
 import Document from './Document.model';
 import Project from './Project.model';
+import User from './User.model';
 
 @ObjectType()
 class Task {
@@ -41,10 +42,9 @@ class Task {
 
     @Field(() => [Document], { nullable: true })
     documents?: Document[];
-    /*
-    @Field(() => User)
-    assignedUser: User
-     */
+
+    @Field(() => [User], { nullable: true })
+    users?: User[];
 }
 
 export default Task;
