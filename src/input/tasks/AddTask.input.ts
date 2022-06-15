@@ -28,6 +28,9 @@ class AddTaskInput {
 
     @Field(() => String, { nullable: true })
     projectId?: string;
+
+    @Field(() => String)
+    userId: string;
 }
 
 export default AddTaskInput;

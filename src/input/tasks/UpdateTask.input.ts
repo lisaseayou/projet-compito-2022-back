@@ -25,6 +25,9 @@ class UpdateTaskType {
 
     @Field(() => String)
     projectId: string;
+
+    @Field(() => String, { nullable: true })
+    userId?: string;
 }
 
 export default UpdateTaskType;

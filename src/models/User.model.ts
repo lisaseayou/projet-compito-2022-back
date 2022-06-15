@@ -3,6 +3,7 @@ import { ObjectType, Field, ID, GraphQLISODateTime } from 'type-graphql';
 
 import Notification from './Notification.model';
 import Project from './Project.model';
+import Task from './Task.model';
 
 @ObjectType()
 class User {
@@ -32,6 +33,9 @@ class User {
 
     @Field(() => [Project], { nullable: true })
     projects?: Project[];
+
+    @Field(() => [Task], { nullable: true })
+    tasks?: Task[];
 }
 
 export default User;

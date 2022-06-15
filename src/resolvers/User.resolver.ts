@@ -12,6 +12,7 @@ class UserResolver {
             include: {
                 notifications: true,
                 projects: true,
+                tasks: true,
             },
         });
     }
@@ -34,6 +35,7 @@ class UserResolver {
             include: {
                 notifications: true,
                 projects: true,
+                tasks: true,
             },
         });
         return userToDb;
@@ -49,6 +51,7 @@ class UserResolver {
             include: {
                 notifications: true,
                 projects: true,
+                tasks: true,
             },
         });
 
@@ -76,6 +79,7 @@ class UserResolver {
             include: {
                 notifications: true,
                 projects: true,
+                tasks: true,
             },
         });
         return userUpdated;

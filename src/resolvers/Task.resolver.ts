@@ -13,6 +13,7 @@ class TaskResolver {
                 project: true,
                 comments: true,
                 documents: true,
+                users: true,
             },
         });
     }
@@ -30,6 +31,7 @@ class TaskResolver {
             createdAt,
             updatedAt,
             projectId,
+            userId,
         }: AddTaskType,
         @Ctx() ctx: { prisma: any }
     ) {
@@ -46,11 +48,15 @@ class TaskResolver {
                 project: {
                     connect: { id: projectId },
                 },
+                users: {
+                    connect: [{ id: userId }],
+                },
             },
             include: {
                 project: true,
                 comments: true,
                 documents: true,
+                users: true,
             },
         });
         return taskToDb;
@@ -70,6 +76,7 @@ class TaskResolver {
                 project: true,
                 comments: true,
                 documents: true,
+                users: true,
             },
         });
         return currentTask;
@@ -87,6 +94,7 @@ class TaskResolver {
             advancement,
             updatedAt,
             projectId,
+            userId,
         }: UpdateTaskType,
         @Ctx() ctx: { prisma: any }
     ) {
@@ -107,11 +115,17 @@ class TaskResolver {
                 project: {
                     connect: { id: projectId },
                 },
+                users: userId
+                    ? {
+                          connect: [{ id: userId }],
+                      }
+                    : {},
             },
             include: {
                 project: true,
                 comments: true,
                 documents: true,
+                users: true,
             },
         });
 

@@ -16,7 +16,9 @@ model User {
   createdAt DateTime
   updatedAt DateTime
   notifications Notification[] @relation("NotifsByUser")
+  comments      Comment[] @relation("CommentsByUser")
   projects      Project[]
+  tasks         Task[]
 }
 
 model Comment {
@@ -26,6 +28,8 @@ model Comment {
   updatedAt     DateTime
   task          Task @relation("CommentsByTask", fields: [taskID], references: [id], onDelete: Cascade, onUpdate: Cascade)
   taskID        String @db.Uuid
+  user          User @relation("CommentsByUser", fields: [userID], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userID        String @db.Uuid
 }
 
 model Document {
@@ -69,4 +73,5 @@ model Task {
   comments              Comment[] @relation("CommentsByTask")
   project               Project @relation("tasksByProjet", fields: [projectID], references: [id], onDelete: Cascade, onUpdate: Cascade)
   projectID             String @db.Uuid
+  users                 User[]
 }
