@@ -13,6 +13,9 @@ class UpdateCommentType {
 
     @Field(() => String, { nullable: true })
     taskId?: string;
+
+    @Field(() => String)
+    userId: string;
 }
 
 export default UpdateCommentType;

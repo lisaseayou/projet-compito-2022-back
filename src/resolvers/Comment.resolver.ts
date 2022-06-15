@@ -11,13 +11,15 @@ class CommentResolver {
         return ctx.prisma.comment.findMany({
             include: {
                 task: true,
+                user: true,
             },
         });
     }
 
     @Mutation(() => Comment)
     async addComment(
-        @Args() { comment, createdAt, updatedAt, taskId }: AddCommentType,
+        @Args()
+        { comment, createdAt, updatedAt, taskId, userId }: AddCommentType,
         @Ctx() ctx: { prisma: any }
     ) {
         const commentToDb = await ctx.prisma.comment.create({
@@ -28,9 +30,13 @@ class CommentResolver {
                 task: {
                     connect: { id: taskId },
                 },
+                user: {
+                    connect: { id: userId },
+                },
             },
             include: {
                 task: true,
+                user: true,
             },
         });
         return commentToDb;
@@ -45,6 +51,7 @@ class CommentResolver {
             where: { id },
             include: {
                 task: true,
+                user: true,
             },
         });
         return currentComment;
@@ -52,22 +59,34 @@ class CommentResolver {
 
     @Mutation(() => Comment)
     async updateComment(
-        @Args() { id, comment, updatedAt, taskId }: UpdateCommentType,
+        @Args() { id, comment, updatedAt, taskId, userId }: UpdateCommentType,
         @Ctx() ctx: { prisma: any }
     ) {
+        const commentToUpdate = ctx.prisma.comment.findUnique({
+            where: { id },
+        });
+
+        console.log(id, comment, updatedAt, taskId, userId);
+
         const commentUpdated = ctx.prisma.comment.update({
             where: { id },
             data: {
-                comment,
-                updatedAt,
+                comment: comment ?? commentToUpdate?.comment,
+                updatedAt: updatedAt ?? commentToUpdate?.updatedAt,
                 task: {
                     connect: {
                         id: taskId,
                     },
                 },
+                user: {
+                    connect: {
+                        id: userId,
+                    },
+                },
             },
             include: {
                 task: true,
+                user: true,
             },
         });
         return commentUpdated;

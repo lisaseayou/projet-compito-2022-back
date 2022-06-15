@@ -13,6 +13,7 @@ class UserResolver {
                 notifications: true,
                 projects: true,
                 tasks: true,
+                comments: true,
             },
         });
     }
@@ -36,6 +37,7 @@ class UserResolver {
                 notifications: true,
                 projects: true,
                 tasks: true,
+                comments: true,
             },
         });
         return userToDb;
@@ -52,6 +54,7 @@ class UserResolver {
                 notifications: true,
                 projects: true,
                 tasks: true,
+                comments: true,
             },
         });
 
@@ -80,6 +83,7 @@ class UserResolver {
                 notifications: true,
                 projects: true,
                 tasks: true,
+                comments: true,
             },
         });
         return userUpdated;
