@@ -1,4 +1,4 @@
-import { ArgsType, Field, GraphQLISODateTime, ID } from 'type-graphql';
+import { ArgsType, Field, ID } from 'type-graphql';
 
 @ArgsType()
 class UpdateProjectType {
@@ -7,9 +7,6 @@ class UpdateProjectType {
 
     @Field(() => String)
     name: string;
-
-    @Field(() => GraphQLISODateTime)
-    updatedAt: Date;
 
     @Field(() => String, { nullable: true })
     userId?: string;

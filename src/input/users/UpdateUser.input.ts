@@ -1,4 +1,4 @@
-import { ArgsType, Field, GraphQLISODateTime, ID } from 'type-graphql';
+import { ArgsType, Field, ID } from 'type-graphql';
 
 @ArgsType()
 class UpdateUserType {
@@ -16,9 +16,6 @@ class UpdateUserType {
 
     @Field(() => String, { nullable: true })
     password?: string;
-
-    @Field(() => GraphQLISODateTime)
-    updatedAt: Date;
 }
 
 export default UpdateUserType;

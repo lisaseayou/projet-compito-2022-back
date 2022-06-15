@@ -1,4 +1,4 @@
-import { ArgsType, Field, GraphQLISODateTime } from 'type-graphql';
+import { ArgsType, Field } from 'type-graphql';
 
 @ArgsType()
 class AddUserInput {
@@ -13,12 +13,6 @@ class AddUserInput {
 
     @Field(() => String)
     password: string;
-
-    @Field(() => GraphQLISODateTime)
-    createdAt: Date;
-
-    @Field(() => GraphQLISODateTime)
-    updatedAt: Date;
 }
 
 export default AddUserInput;

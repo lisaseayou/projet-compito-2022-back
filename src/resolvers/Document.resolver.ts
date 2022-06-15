@@ -16,14 +16,13 @@ class DocumentResolver {
 
     @Mutation(() => Document)
     async addDocument(
-        @Args() { name, size, createdAt, taskId }: AddDocumentType,
+        @Args() { name, size, taskId }: AddDocumentType,
         @Ctx() ctx: { prisma: any }
     ) {
         const documentToDb = await ctx.prisma.document.create({
             data: {
                 name,
                 size,
-                createdAt,
                 task: {
                     connect: { id: taskId },
                 },

@@ -1,4 +1,4 @@
-import { ArgsType, Field, GraphQLISODateTime, ID, Int } from 'type-graphql';
+import { ArgsType, Field, ID, Int } from 'type-graphql';
 
 @ArgsType()
 class UpdateTaskType {
@@ -19,9 +19,6 @@ class UpdateTaskType {
 
     @Field(() => Int, { nullable: true })
     advancement?: number;
-
-    @Field(() => GraphQLISODateTime)
-    updatedAt: Date;
 
     @Field(() => String)
     projectId: string;

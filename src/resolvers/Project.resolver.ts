@@ -18,14 +18,12 @@ class ProjectResolver {
 
     @Mutation(() => Project)
     async addProject(
-        @Args() { name, createdAt, updatedAt, userId }: AddProjectType,
+        @Args() { name, userId }: AddProjectType,
         @Ctx() ctx: { prisma: any }
     ) {
         const projectToDb = await ctx.prisma.project.create({
             data: {
                 name,
-                createdAt,
-                updatedAt,
                 users: {
                     connect: [{ id: userId }],
                 },
@@ -56,14 +54,13 @@ class ProjectResolver {
 
     @Mutation(() => Project)
     async updateProject(
-        @Args() { id, name, updatedAt, userId }: UpdateProjectType,
+        @Args() { id, name, userId }: UpdateProjectType,
         @Ctx() ctx: { prisma: any }
     ) {
         const projectUpdated = ctx.prisma.project.update({
             where: { id },
             data: {
                 name,
-                updatedAt,
                 users: userId
                     ? {
                           connect: [{ id: userId }],

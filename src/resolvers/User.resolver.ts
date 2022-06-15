@@ -21,7 +21,7 @@ class UserResolver {
     @Mutation(() => User)
     async addUser(
         @Args()
-        { name, email, roles, password, createdAt, updatedAt }: AddUserType,
+        { name, email, roles, password }: AddUserType,
         @Ctx() ctx: { prisma: any }
     ) {
         const userToDb = await ctx.prisma.user.create({
@@ -30,8 +30,6 @@ class UserResolver {
                 email,
                 roles,
                 password,
-                createdAt,
-                updatedAt,
             },
             include: {
                 notifications: true,
@@ -63,7 +61,7 @@ class UserResolver {
 
     @Mutation(() => User)
     async updateUser(
-        @Args() { id, name, email, roles, password, updatedAt }: UpdateUserType,
+        @Args() { id, name, email, roles, password }: UpdateUserType,
         @Ctx() ctx: { prisma: any }
     ) {
         const userToUpdate = ctx.prisma.user.findUnique({
@@ -77,7 +75,6 @@ class UserResolver {
                 email: userToUpdate.email ?? email,
                 roles: userToUpdate.roles ?? roles,
                 password: userToUpdate.password ?? password,
-                updatedAt: userToUpdate.updatedAt ?? updatedAt,
             },
             include: {
                 notifications: true,

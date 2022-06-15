@@ -28,8 +28,6 @@ class TaskResolver {
             initialSpentTime,
             additionalSpentTime,
             advancement,
-            createdAt,
-            updatedAt,
             projectId,
             userId,
         }: AddTaskType,
@@ -43,8 +41,6 @@ class TaskResolver {
                 initialSpentTime,
                 additionalSpentTime,
                 advancement,
-                createdAt,
-                updatedAt,
                 project: {
                     connect: { id: projectId },
                 },
@@ -92,7 +88,6 @@ class TaskResolver {
             dueDate,
             additionalSpentTime,
             advancement,
-            updatedAt,
             projectId,
             userId,
         }: UpdateTaskType,
@@ -111,7 +106,6 @@ class TaskResolver {
                 additionalSpentTime:
                     taskToUpdate.additionalSpentTime ?? additionalSpentTime,
                 advancement: taskToUpdate.advancement ?? advancement,
-                updatedAt,
                 project: {
                     connect: { id: projectId },
                 },

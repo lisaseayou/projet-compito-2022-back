@@ -19,14 +19,12 @@ class CommentResolver {
     @Mutation(() => Comment)
     async addComment(
         @Args()
-        { comment, createdAt, updatedAt, taskId, userId }: AddCommentType,
+        { comment, taskId, userId }: AddCommentType,
         @Ctx() ctx: { prisma: any }
     ) {
         const commentToDb = await ctx.prisma.comment.create({
             data: {
                 comment,
-                createdAt,
-                updatedAt,
                 task: {
                     connect: { id: taskId },
                 },
@@ -59,20 +57,17 @@ class CommentResolver {
 
     @Mutation(() => Comment)
     async updateComment(
-        @Args() { id, comment, updatedAt, taskId, userId }: UpdateCommentType,
+        @Args() { id, comment, taskId, userId }: UpdateCommentType,
         @Ctx() ctx: { prisma: any }
     ) {
         const commentToUpdate = ctx.prisma.comment.findUnique({
             where: { id },
         });
 
-        console.log(id, comment, updatedAt, taskId, userId);
-
         const commentUpdated = ctx.prisma.comment.update({
             where: { id },
             data: {
                 comment: comment ?? commentToUpdate?.comment,
-                updatedAt: updatedAt ?? commentToUpdate?.updatedAt,
                 task: {
                     connect: {
                         id: taskId,

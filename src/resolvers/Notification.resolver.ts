@@ -17,14 +17,13 @@ class NotificationResolver {
 
     @Mutation(() => Notification)
     async addNotification(
-        @Args() { description, isRead, createdAt, userId }: AddNotificationType,
+        @Args() { description, isRead, userId }: AddNotificationType,
         @Ctx() ctx: { prisma: any }
     ) {
         const notificationToDb = await ctx.prisma.notification.create({
             data: {
                 description,
                 isRead,
-                createdAt,
                 user: {
                     connect: {
                         id: userId,
