@@ -5,22 +5,30 @@ import User from './User.model';
 
 @ObjectType()
 class Project {
-    @Field(() => ID)
+    @Field(() => ID, { description: 'Id of the project' })
     id: string;
 
-    @Field(() => String)
+    @Field(() => String, { description: 'Name of the project' })
     name: string;
 
-    @Field(() => GraphQLISODateTime)
+    @Field(() => GraphQLISODateTime, { description: 'Project creation date' })
     createdAt: Date;
 
-    @Field(() => GraphQLISODateTime)
+    @Field(() => GraphQLISODateTime, {
+        description: 'Date of last modification of the project',
+    })
     updatedAt: Date;
 
-    @Field(() => [Task], { nullable: true })
+    @Field(() => [Task], {
+        nullable: true,
+        description: 'List of tasks related to the project',
+    })
     tasks?: Task[];
 
-    @Field(() => [User], { nullable: true })
+    @Field(() => [User], {
+        nullable: true,
+        description: 'list of users related to the project',
+    })
     users?: User[];
 }
 

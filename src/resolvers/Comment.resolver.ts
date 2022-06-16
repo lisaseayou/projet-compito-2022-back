@@ -11,12 +11,18 @@ import CommentService from '../services/Comment.service';
 class CommentResolver {
     constructor(private readonly commentService: CommentService) {}
 
-    @Query(() => [Comment, Query])
+    @Query(() => [Comment, Query], {
+        description: 'Get all comments',
+        nullable: true,
+    })
     async allComments(@Ctx() ctx: { prisma: any }) {
         return this?.commentService?.findAll(ctx);
     }
 
-    @Mutation(() => Comment)
+    @Mutation(() => Comment, {
+        description: 'Add new comment',
+        nullable: false,
+    })
     async addComment(
         @Args()
         { comment, taskId, userId }: AddCommentType,
@@ -25,7 +31,9 @@ class CommentResolver {
         return this?.commentService?.save(ctx, comment, userId, taskId);
     }
 
-    @Mutation(() => Comment)
+    @Mutation(() => Comment, {
+        description: 'Delete comment by id',
+    })
     async deleteComment(
         @Args() { id }: DeleteCommentType,
         @Ctx() ctx: { prisma: any }
@@ -33,7 +41,9 @@ class CommentResolver {
         return this?.commentService?.deleteOne(ctx, id);
     }
 
-    @Mutation(() => Comment)
+    @Mutation(() => Comment, {
+        description: 'Update comment by id',
+    })
     async updateComment(
         @Args() { id, comment, taskId, userId }: UpdateCommentType,
         @Ctx() ctx: { prisma: any }

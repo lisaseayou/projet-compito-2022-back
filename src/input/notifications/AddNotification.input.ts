@@ -2,13 +2,17 @@ import { ArgsType, Field } from 'type-graphql';
 
 @ArgsType()
 class AddNotificationInput {
-    @Field(() => String)
+    @Field(() => String, { description: 'Description of the notification' })
     description: string;
 
-    @Field(() => Boolean)
+    @Field(() => Boolean, {
+        description: 'Status of the notification, read or not',
+    })
     isRead: boolean;
 
-    @Field(() => String)
+    @Field(() => String, {
+        description: 'ID of the user to link to the notification',
+    })
     userId: string;
 }
 
