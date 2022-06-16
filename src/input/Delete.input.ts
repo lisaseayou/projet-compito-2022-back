@@ -2,8 +2,8 @@ import { ArgsType, Field, ID } from 'type-graphql';
 
 @ArgsType()
 class DeleteInput {
-    @Field(() => ID)
-    id: string
+    @Field(() => ID, { description: 'ID of the data to delete' })
+    id: string;
 }
 
 export default DeleteInput;

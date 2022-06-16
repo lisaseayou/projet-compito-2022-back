@@ -11,12 +11,18 @@ import ProjectService from '../services/Project.service';
 class ProjectResolver {
     constructor(private readonly projectService: ProjectService) {}
 
-    @Query(() => [Project, Query])
+    @Query(() => [Project, Query], {
+        description: 'Get all projects',
+        nullable: true,
+    })
     async allProjects(@Ctx() ctx: { prisma: any }) {
         return this?.projectService?.findAll(ctx);
     }
 
-    @Mutation(() => Project)
+    @Mutation(() => Project, {
+        description: 'Add new project',
+        nullable: false,
+    })
     async addProject(
         @Args() { name, userId }: AddProjectType,
         @Ctx() ctx: { prisma: any }
@@ -24,7 +30,9 @@ class ProjectResolver {
         return this?.projectService?.save(ctx, name, userId);
     }
 
-    @Mutation(() => Project)
+    @Mutation(() => Project, {
+        description: 'Delete project by id',
+    })
     async deleteProject(
         @Args() { id }: DeleteProjectType,
         @Ctx() ctx: { prisma: any }
@@ -32,7 +40,9 @@ class ProjectResolver {
         return this?.projectService?.deleteOne(ctx, id);
     }
 
-    @Mutation(() => Project)
+    @Mutation(() => Project, {
+        description: 'Update project by id',
+    })
     async updateProject(
         @Args() { id, name, userId }: UpdateProjectType,
         @Ctx() ctx: { prisma: any }

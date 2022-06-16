@@ -7,37 +7,53 @@ import Task from './Task.model';
 
 @ObjectType()
 class User {
-    @Field(() => ID)
+    @Field(() => ID, { description: 'Id of the user' })
     id: string;
 
-    @Field(() => String)
+    @Field(() => String, { description: 'Name of the user' })
     name: string;
 
-    @Field(() => String)
+    @Field(() => String, { description: 'Email of the user' })
     email: string;
 
-    @Field(() => [String])
+    @Field(() => [String], { description: 'Roles of the user' })
     roles: string[];
 
-    @Field(() => String)
+    @Field(() => String, { description: 'Password of the user' })
     password: string;
 
-    @Field(() => GraphQLISODateTime)
+    @Field(() => GraphQLISODateTime, {
+        description: "The user's registration date",
+    })
     createdAt: Date;
 
-    @Field(() => GraphQLISODateTime)
+    @Field(() => GraphQLISODateTime, {
+        description: 'Date of last modification of user informations',
+    })
     updatedAt: Date;
 
-    @Field(() => [Notification], { nullable: true })
+    @Field(() => [Notification], {
+        nullable: true,
+        description: 'List of comments related to the user',
+    })
     notifications?: Notification[];
 
-    @Field(() => [Comment], { nullable: true })
+    @Field(() => [Comment], {
+        nullable: true,
+        description: 'List of comments related to the user',
+    })
     comments?: Comment[];
 
-    @Field(() => [Project], { nullable: true })
+    @Field(() => [Project], {
+        nullable: true,
+        description: 'List of Projects related to the user',
+    })
     projects?: Project[];
 
-    @Field(() => [Task], { nullable: true })
+    @Field(() => [Task], {
+        nullable: true,
+        description: 'List of tasks related to the user',
+    })
     tasks?: Task[];
 }
 

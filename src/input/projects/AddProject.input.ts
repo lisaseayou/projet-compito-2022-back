@@ -2,10 +2,12 @@ import { ArgsType, Field } from 'type-graphql';
 
 @ArgsType()
 class AddProjectInput {
-    @Field(() => String)
+    @Field(() => String, { description: 'Name of the project' })
     name: string;
 
-    @Field(() => String)
+    @Field(() => String, {
+        description: 'ID of the user to link to the project',
+    })
     userId: string;
 }
 

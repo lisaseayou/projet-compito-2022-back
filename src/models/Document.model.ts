@@ -4,19 +4,21 @@ import Task from './Task.model';
 
 @ObjectType()
 class Document {
-    @Field(() => ID)
+    @Field(() => ID, { description: 'ID of uploaded file' })
     id: string;
 
-    @Field(() => String)
+    @Field(() => String, { description: 'Name of uploader file' })
     name: string;
 
-    @Field(() => Int)
+    @Field(() => Int, { description: 'Size of uploader file' })
     size: number;
 
-    @Field(() => GraphQLISODateTime)
+    @Field(() => GraphQLISODateTime, {
+        description: 'File upload date',
+    })
     createdAt: Date;
 
-    @Field(() => Task)
+    @Field(() => Task, { description: 'ID of the task related to the file' })
     task: Task;
 }
 

@@ -7,13 +7,13 @@ import User from './User.model';
 
 @ObjectType()
 class Task {
-    @Field(() => ID)
+    @Field(() => ID, { description: 'Id of the task' })
     id: string;
 
-    @Field(() => String)
+    @Field(() => String, { description: 'Subject of the task' })
     subject: string;
 
-    @Field(() => String)
+    @Field(() => String, { description: 'Status of the task' })
     status: string;
 
     @Field(() => String)

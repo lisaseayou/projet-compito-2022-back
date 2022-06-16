@@ -4,19 +4,23 @@ import User from './User.model';
 
 @ObjectType()
 class Notification {
-    @Field(() => ID)
+    @Field(() => ID, { description: 'Id of the notification' })
     id: string;
 
-    @Field(() => String)
+    @Field(() => String, { description: 'Description of the notification' })
     description: string;
 
-    @Field(() => Boolean)
+    @Field(() => Boolean, {
+        description: 'Status of the notification, read or not',
+    })
     isRead: boolean;
 
-    @Field(() => GraphQLISODateTime)
+    @Field(() => GraphQLISODateTime, {
+        description: 'Notification creation date',
+    })
     createdAt: Date;
 
-    @Field(() => User)
+    @Field(() => User, { description: 'User related to the notification' })
     user: User;
 }
 

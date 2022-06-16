@@ -11,12 +11,18 @@ import NotificationService from '../services/Notification.service';
 class NotificationResolver {
     constructor(private readonly notificationService: NotificationService) {}
 
-    @Query(() => [Notification, Query])
+    @Query(() => [Notification, Query], {
+        description: 'Get all notifications',
+        nullable: true,
+    })
     async allNotifications(@Ctx() ctx: { prisma: any }) {
         return this?.notificationService?.findAll(ctx);
     }
 
-    @Mutation(() => Notification)
+    @Mutation(() => Notification, {
+        description: 'Add new notification',
+        nullable: false,
+    })
     async addNotification(
         @Args() { description, isRead, userId }: AddNotificationType,
         @Ctx() ctx: { prisma: any }
@@ -29,7 +35,9 @@ class NotificationResolver {
         );
     }
 
-    @Mutation(() => Notification)
+    @Mutation(() => Notification, {
+        description: 'Delete notification by id',
+    })
     async deleteNotification(
         @Args() { id }: DeleteNotificationType,
         @Ctx() ctx: { prisma: any }
@@ -37,7 +45,9 @@ class NotificationResolver {
         return this?.notificationService?.deleteOne(ctx, id);
     }
 
-    @Mutation(() => Notification)
+    @Mutation(() => Notification, {
+        description: 'Update notification by id',
+    })
     async updateNotification(
         @Args() { id, description, isRead, userId }: UpdateNotificationType,
         @Ctx() ctx: { prisma: any }

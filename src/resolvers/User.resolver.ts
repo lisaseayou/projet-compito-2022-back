@@ -11,12 +11,18 @@ import UserService from '../services/User.service';
 class UserResolver {
     constructor(private readonly userService: UserService) {}
 
-    @Query(() => [User, Query])
+    @Query(() => [User, Query], {
+        description: 'Get all users',
+        nullable: true,
+    })
     async allUsers(@Ctx() ctx: { prisma: any }) {
         return this?.userService?.findAll(ctx);
     }
 
-    @Mutation(() => User)
+    @Mutation(() => User, {
+        description: 'Add new user',
+        nullable: false,
+    })
     async addUser(
         @Args()
         { name, email, roles, password }: AddUserType,
@@ -25,7 +31,9 @@ class UserResolver {
         return this?.userService?.save(ctx, name, email, roles, password);
     }
 
-    @Mutation(() => User)
+    @Mutation(() => User, {
+        description: 'Delete user by id',
+    })
     async deleteUser(
         @Args() { id }: DeleteUserType,
         @Ctx() ctx: { prisma: any }
@@ -33,7 +41,9 @@ class UserResolver {
         return this?.userService?.deleteOne(ctx, id);
     }
 
-    @Mutation(() => User)
+    @Mutation(() => User, {
+        description: 'Update user by id',
+    })
     async updateUser(
         @Args() { id, name, email, roles, password }: UpdateUserType,
         @Ctx() ctx: { prisma: any }

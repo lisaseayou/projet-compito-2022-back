@@ -11,12 +11,18 @@ import TaskService from '../services/Task.service';
 class TaskResolver {
     constructor(private readonly taskService: TaskService) {}
 
-    @Query(() => [Task, Query])
+    @Query(() => [Task, Query], {
+        description: 'Get all tasks',
+        nullable: true,
+    })
     async allTasks(@Ctx() ctx: { prisma: any }) {
         return this?.taskService?.findAll(ctx);
     }
 
-    @Mutation(() => Task)
+    @Mutation(() => Task, {
+        description: 'Add new task',
+        nullable: false,
+    })
     async addTask(
         @Args()
         {
@@ -44,7 +50,9 @@ class TaskResolver {
         );
     }
 
-    @Mutation(() => Task)
+    @Mutation(() => Task, {
+        description: 'Delete task by id',
+    })
     async deleteTask(
         @Args()
         { id }: DeleteTaskType,
@@ -53,7 +61,9 @@ class TaskResolver {
         return this?.taskService?.deleteOne(ctx, id);
     }
 
-    @Mutation(() => Task)
+    @Mutation(() => Task, {
+        description: 'Update task by id',
+    })
     async updateTask(
         @Args()
         {

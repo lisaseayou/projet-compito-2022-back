@@ -9,6 +9,7 @@ import 'reflect-metadata';
 import { buildSchemaSync } from 'type-graphql';
 import Container from 'typedi';
 
+// init client prisma
 const prisma = new PrismaClient();
 
 const { PORT } = process.env;
@@ -18,6 +19,7 @@ const main = async () => {
     const app = Express();
     const httpServer = createServer(app);
 
+    // init the resolvers and the services in the schema
     const schema = buildSchemaSync({
         resolvers: [`${__dirname}/**/*.resolver.{ts,js}`],
         container: Container,
