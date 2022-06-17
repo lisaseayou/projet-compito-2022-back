@@ -53,6 +53,7 @@ model Notification {
 model Project {
   id            String    @id @unique @default(uuid()) @db.Uuid
   name          String
+  description   String    @db.Text
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @updatedAt @map(name: "updated_at")
   tasks         Task[]    @relation("tasks_by_projet")

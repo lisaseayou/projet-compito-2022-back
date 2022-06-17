@@ -11,6 +11,9 @@ class Project {
     @Field(() => String, { description: 'Name of the project' })
     name: string;
 
+    @Field(() => String, { description: 'Description of the project' })
+    description: string;
+
     @Field(() => GraphQLISODateTime, { description: 'Project creation date' })
     createdAt: Date;
 
