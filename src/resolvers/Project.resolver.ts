@@ -19,15 +19,26 @@ class ProjectResolver {
         return this?.projectService?.findAll(ctx);
     }
 
+    @Query(() => Project, {
+        description: 'Get one project by id',
+        nullable: false,
+    })
+    async project(
+        @Args() { id }: DeleteProjectType,
+        @Ctx() ctx: { prisma: any }
+    ) {
+        return this?.projectService?.findOne(ctx, id);
+    }
+
     @Mutation(() => Project, {
         description: 'Add new project',
         nullable: false,
     })
     async addProject(
-        @Args() { name, userId }: AddProjectType,
+        @Args() { name, description, userId }: AddProjectType,
         @Ctx() ctx: { prisma: any }
     ) {
-        return this?.projectService?.save(ctx, name, userId);
+        return this?.projectService?.save(ctx, name, description, userId);
     }
 
     @Mutation(() => Project, {
@@ -44,10 +55,16 @@ class ProjectResolver {
         description: 'Update project by id',
     })
     async updateProject(
-        @Args() { id, name, userId }: UpdateProjectType,
+        @Args() { id, name, description, userId }: UpdateProjectType,
         @Ctx() ctx: { prisma: any }
     ) {
-        return this?.projectService?.updateOne(ctx, id, name, userId);
+        return this?.projectService?.updateOne(
+            ctx,
+            id,
+            name,
+            description,
+            userId
+        );
     }
 }
 

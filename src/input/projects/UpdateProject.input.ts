@@ -5,8 +5,14 @@ class UpdateProjectType {
     @Field(() => ID, { description: 'Description of the project' })
     id: string;
 
-    @Field(() => String, { description: 'Name of the project' })
-    name: string;
+    @Field(() => String, { description: 'Name of the project', nullable: true })
+    name?: string;
+
+    @Field(() => String, {
+        description: 'Description of the project',
+        nullable: true,
+    })
+    description?: string;
 
     @Field(() => String, {
         nullable: true,

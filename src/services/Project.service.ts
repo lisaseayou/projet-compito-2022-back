@@ -11,10 +11,21 @@ class ProjectService {
         });
     }
 
-    async save(ctx: any, name: string, userId: string) {
+    async findOne(ctx: any, id: string) {
+        return ctx.prisma.project.findUnique({
+            where: { id },
+            include: {
+                tasks: true,
+                users: true,
+            },
+        });
+    }
+
+    async save(ctx: any, name: string, description: string, userId: string) {
         const projectToDb = await ctx.prisma.project.create({
             data: {
                 name,
+                description,
                 users: {
                     connect: [{ id: userId }],
                 },
@@ -28,11 +39,18 @@ class ProjectService {
         return projectToDb;
     }
 
-    async updateOne(ctx: any, id: string, name?: string, userId?: string) {
+    async updateOne(
+        ctx: any,
+        id: string,
+        name?: string,
+        description?: string,
+        userId?: string
+    ) {
         const projectUpdated = ctx.prisma.project.update({
             where: { id },
             data: {
                 name,
+                description,
                 users: userId
                     ? {
                           connect: [{ id: userId }],
