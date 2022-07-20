@@ -11,10 +11,10 @@ services:
         depends_on:
             - postgres
         environment:
-            - DATABASE_URL=postgresql://postgres:postgres@postgres/postgres?schema=public
+            - DATABASE_URL=postgresql://postgres:db-password@database/compito?schema=public
         restart: always
 
-    postgres:
+    database:
         image: postgres
         container_name: postgres
         hostname: postgres
@@ -22,28 +22,13 @@ services:
         #     - 5432:5432
         environment:
             POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: postgres
-            POSTGRES_DB: postgres
+            POSTGRES_PASSWORD: db-password
+            POSTGRES_DB: compito
         # env_file:
         #     - ./.env
         volumes:
             - postgres-volume:/var/lib/postgresql/data
         restart: unless-stopped
-
-    # prisma:
-    #     image: prismagraphql/prisma
-    #     restart: always
-    #     ports:
-    #         - '4466:4466'
-    #     environment:
-    #         PRISMA_CONFIG: |
-    #             databases:
-    #                 default:
-    #                     connector: postgres
-    #                     host: postgres
-    #                     user: postgres
-    #                     password: postgres
-    #                     port: 3306
 
 volumes:
     postgres-volume:
