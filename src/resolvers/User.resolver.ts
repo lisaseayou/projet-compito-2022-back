@@ -20,15 +20,20 @@ class UserResolver {
     }
 
     @Mutation(() => User, {
-        description: 'Add new user',
+        description: 'Register new user',
         nullable: false,
     })
-    async addUser(
+    async register(
         @Args()
         { name, email, roles, password }: AddUserType,
         @Ctx() ctx: { prisma: any }
     ) {
-        return this?.userService?.save(ctx, name, email, roles, password);
+        return this?.userService?.register(ctx, {
+            name,
+            email,
+            roles,
+            password,
+        });
     }
 
     @Mutation(() => User, {

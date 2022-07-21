@@ -1,4 +1,7 @@
+import { ApolloError } from 'apollo-server-express';
 import { Service } from 'typedi';
+import * as bcrypt from 'bcrypt';
+import generateToken from '../utils/auth';
 
 @Service()
 class UserService {
@@ -13,19 +16,24 @@ class UserService {
         });
     }
 
-    async save(
-        ctx: any,
-        name: string,
-        email: string,
-        roles: string[],
-        password: string
-    ) {
+    async register(ctx: any, data: any) {
+        // hash the password
+        const salt = await bcrypt.genSalt(10);
+        const passwordHashed = await bcrypt.hash(data.password, salt);
+
+        // generate the token of connection
+        const token = generateToken({
+            name: data.name,
+            email: data.email,
+            roles: data.roles,
+        });
+
         const userToDb = await ctx.prisma.user.create({
             data: {
-                name,
-                email,
-                roles,
-                password,
+                name: data.name,
+                email: data.email,
+                roles: data.roles,
+                password: passwordHashed,
             },
             include: {
                 notifications: true,
@@ -34,7 +42,16 @@ class UserService {
                 comments: true,
             },
         });
-        return userToDb;
+
+        // create the cookies limit to 7 days
+        ctx.res.cookie('token', token, {
+            secure: process.env.NODE_ENV === 'production',
+            httpOnly: true,
+            maxAge: 1000 * 60 * 60 * 24 * 7,
+            sameSite: 'strict',
+        });
+
+        return { ...userToDb, success: true };
     }
 
     async updateOne(
