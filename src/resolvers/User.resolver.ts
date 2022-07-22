@@ -5,6 +5,7 @@ import AddUserType from '../input/users/AddUser.input';
 import DeleteUserType from '../input/Delete.input';
 import UpdateUserType from '../input/users/UpdateUser.input';
 import UserService from '../services/User.service';
+import LoginUserType from '../input/users/LoginUser.input';
 
 @Service()
 @Resolver(User)
@@ -20,15 +21,30 @@ class UserResolver {
     }
 
     @Mutation(() => User, {
-        description: 'Add new user',
+        description: 'Register new user',
         nullable: false,
     })
-    async addUser(
+    async register(
         @Args()
         { name, email, roles, password }: AddUserType,
         @Ctx() ctx: { prisma: any }
     ) {
-        return this?.userService?.save(ctx, name, email, roles, password);
+        return this?.userService?.register(ctx, {
+            name,
+            email,
+            roles,
+            password,
+        });
+    }
+
+    @Query(() => User, {
+        description: 'Login user',
+    })
+    async login(
+        @Args() { email, password }: LoginUserType,
+        @Ctx() ctx: { prisma: any }
+    ) {
+        return this?.userService?.login(ctx, email, password);
     }
 
     @Mutation(() => User, {
