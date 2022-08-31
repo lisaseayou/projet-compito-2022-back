@@ -1,10 +1,7 @@
-import { ArgsType, Field, ID } from 'type-graphql';
+import { InputType, Field } from 'type-graphql';
 
-@ArgsType()
-class UpdateNotificationType {
-    @Field(() => ID, { description: 'Id of the notification' })
-    id: string;
-
+@InputType()
+class UpdateNotificationInput {
     @Field(() => String, {
         nullable: true,
         description: 'Description of the notification',
@@ -23,4 +20,4 @@ class UpdateNotificationType {
     userId: string;
 }
 
-export default UpdateNotificationType;
+export default UpdateNotificationInput;

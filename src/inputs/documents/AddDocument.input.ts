@@ -1,6 +1,6 @@
-import { ArgsType, Field, Int } from 'type-graphql';
+import { InputType, Field, Int } from 'type-graphql';
 
-@ArgsType()
+@InputType()
 class AddDocumentInput {
     @Field(() => String, { description: 'Name of uploader file' })
     name: string;

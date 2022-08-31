@@ -10,7 +10,12 @@ class NotificationService {
         });
     }
 
-    async save(ctx: any, description: string, isRead: boolean, userId: string) {
+    async save(
+        ctx: any,
+        data: { description: string; isRead: boolean; userId: string }
+    ) {
+        const { description, isRead, userId } = data;
+
         const notificationToDb = await ctx.prisma.notification.create({
             data: {
                 description,
@@ -31,10 +36,14 @@ class NotificationService {
     async updateOne(
         ctx: any,
         id: string,
-        description?: string,
-        isRead?: boolean,
-        userId?: string
+        data: {
+            description?: string;
+            isRead?: boolean;
+            userId?: string;
+        }
     ) {
+        const { description, isRead, userId } = data;
+
         const notifToUpdate = ctx.prisma.notification.findUnique({
             where: { id },
         });

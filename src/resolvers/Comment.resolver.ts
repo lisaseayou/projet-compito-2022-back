@@ -1,15 +1,14 @@
-import { Resolver, Query, Ctx, Mutation, Args } from 'type-graphql';
+import { Resolver, Query, Ctx, Mutation, Arg } from 'type-graphql';
 import { Service } from 'typedi';
 import Comment from '../models/Comment.model';
-import AddCommentType from '../input/comments/AddComment.input';
-import DeleteCommentType from '../input/Delete.input';
-import UpdateCommentType from '../input/comments/UpdateComment.input';
 import CommentService from '../services/Comment.service';
+import AddCommentInput from '../inputs/comments/AddComment.input';
+import UpdateCommentInput from '../inputs/comments/UpdateComment.input';
 
 @Service()
 @Resolver(Comment)
 class CommentResolver {
-    constructor(private readonly commentService: CommentService) {}
+    constructor(private readonly commentService: CommentService) { }
 
     @Query(() => [Comment, Query], {
         description: 'Get all comments',
@@ -24,20 +23,16 @@ class CommentResolver {
         nullable: false,
     })
     async addComment(
-        @Args()
-        { comment, taskId, userId }: AddCommentType,
+        @Arg("data") data: AddCommentInput,
         @Ctx() ctx: { prisma: any }
     ) {
-        return this?.commentService?.save(ctx, comment, userId, taskId);
+        return this?.commentService?.save(ctx, data);
     }
 
     @Mutation(() => Comment, {
         description: 'Delete comment by id',
     })
-    async deleteComment(
-        @Args() { id }: DeleteCommentType,
-        @Ctx() ctx: { prisma: any }
-    ) {
+    async deleteComment(@Arg('id') id: string, @Ctx() ctx: { prisma: any }) {
         return this?.commentService?.deleteOne(ctx, id);
     }
 
@@ -45,16 +40,11 @@ class CommentResolver {
         description: 'Update comment by id',
     })
     async updateComment(
-        @Args() { id, comment, taskId, userId }: UpdateCommentType,
+        @Arg('id') id: string,
+        @Arg('data') data: UpdateCommentInput,
         @Ctx() ctx: { prisma: any }
     ) {
-        return this?.commentService?.updateOne(
-            ctx,
-            id,
-            comment,
-            taskId,
-            userId
-        );
+        return this?.commentService?.updateOne(ctx, id, data);
     }
 }
 

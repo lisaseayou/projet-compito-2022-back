@@ -1,6 +1,6 @@
-import { ArgsType, Field } from 'type-graphql';
+import { InputType, Field } from 'type-graphql';
 
-@ArgsType()
+@InputType()
 class AddCommentInput {
     @Field(() => String, { description: 'Content of the comment' })
     comment: string;

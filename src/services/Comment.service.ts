@@ -11,7 +11,12 @@ class CommentService {
         });
     }
 
-    async save(ctx: any, comment: string, userId: string, taskId?: string) {
+    async save(
+        ctx: any,
+        data: { comment: string; userId: string; taskId?: string }
+    ) {
+        const { comment, userId, taskId } = data;
+
         const commentToDb = await ctx.prisma.comment.create({
             data: {
                 comment,
@@ -33,10 +38,9 @@ class CommentService {
     async updateOne(
         ctx: any,
         id: string,
-        comment?: string,
-        taskId?: string,
-        userId?: string
+        data: { comment?: string; taskId?: string; userId?: string }
     ) {
+        const { comment, taskId, userId } = data;
         const commentToUpdate = ctx.prisma.comment.findUnique({
             where: { id },
         });

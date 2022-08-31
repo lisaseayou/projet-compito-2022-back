@@ -1,10 +1,7 @@
-import { ArgsType, Field, ID } from 'type-graphql';
+import { InputType, Field } from 'type-graphql';
 
-@ArgsType()
-class UpdateCommentType {
-    @Field(() => ID, { description: 'Id of the comment' })
-    id: string;
-
+@InputType()
+class UpdateCommentInput {
     @Field(() => String, { description: 'Content of the comment' })
     comment: string;
 
@@ -20,4 +17,4 @@ class UpdateCommentType {
     userId: string;
 }
 
-export default UpdateCommentType;
+export default UpdateCommentInput;

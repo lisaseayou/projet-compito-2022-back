@@ -1,6 +1,6 @@
-import { ArgsType, Field } from 'type-graphql';
+import { InputType, Field } from 'type-graphql';
 
-@ArgsType()
+@InputType()
 class AddNotificationInput {
     @Field(() => String, { description: 'Description of the notification' })
     description: string;

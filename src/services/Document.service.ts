@@ -10,7 +10,9 @@ class DocumentService {
         });
     }
 
-    async save(ctx: any, name: string, size: number, taskId: string) {
+    async save(ctx: any, data: { name: string; size: number; taskId: string }) {
+        const { name, size, taskId } = data;
+
         const documentToDb = await ctx.prisma.document.create({
             data: {
                 name,

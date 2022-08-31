@@ -1,9 +1,8 @@
-import { Resolver, Query, Ctx, Mutation, Args } from 'type-graphql';
+import { Resolver, Query, Ctx, Mutation, Arg } from 'type-graphql';
 import { Service } from 'typedi';
 import Document from '../models/Document.model';
-import AddDocumentType from '../input/documents/AddDocument.input';
-import DeleteDocumentType from '../input/Delete.input';
 import DocumentService from '../services/Document.service';
+import AddDocumentInput from '../inputs/documents/AddDocument.input';
 
 @Service()
 @Resolver(Document)
@@ -21,17 +20,14 @@ class DocumentResolver {
         description: 'Save new uploaded file',
     })
     async addDocument(
-        @Args() { name, size, taskId }: AddDocumentType,
+        @Arg('data') data: AddDocumentInput,
         @Ctx() ctx: { prisma: any }
     ) {
-        return this?.documentService?.save(ctx, name, size, taskId);
+        return this?.documentService?.save(ctx, data);
     }
 
     @Mutation(() => Document, { description: 'Delete uploaded file by id' })
-    async deleteDocument(
-        @Args() { id }: DeleteDocumentType,
-        @Ctx() ctx: { prisma: any }
-    ) {
+    async deleteDocument(@Arg('id') id: string, @Ctx() ctx: { prisma: any }) {
         return this?.documentService?.deleteOne(ctx, id);
     }
 }
