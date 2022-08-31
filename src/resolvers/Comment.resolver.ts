@@ -1,10 +1,10 @@
-import { Resolver, Query, Ctx, Mutation, Args } from 'type-graphql';
+import { Resolver, Query, Ctx, Mutation, Arg } from 'type-graphql';
 import { Service } from 'typedi';
 import Comment from '../models/Comment.model';
-import AddCommentType from '../input/comments/AddComment.input';
-import DeleteCommentType from '../input/Delete.input';
-import UpdateCommentType from '../input/comments/UpdateComment.input';
 import CommentService from '../services/Comment.service';
+import AddCommentInput from '../inputs/comments/AddComment.input';
+import UpdateCommentInput from '../inputs/comments/UpdateComment.input';
+import { IContext } from '../interfaces';
 
 @Service()
 @Resolver(Comment)
@@ -15,29 +15,30 @@ class CommentResolver {
         description: 'Get all comments',
         nullable: true,
     })
-    async allComments(@Ctx() ctx: { prisma: any }) {
+    async allComments(@Ctx() ctx: IContext) {
         return this?.commentService?.findAll(ctx);
+    }
+
+    @Query(() => Comment, {
+        description: 'Get one comment by id',
+        nullable: false,
+    })
+    async comment(@Arg('id') id: string, @Ctx() ctx: IContext) {
+        return this?.commentService?.findOne(ctx, id);
     }
 
     @Mutation(() => Comment, {
         description: 'Add new comment',
         nullable: false,
     })
-    async addComment(
-        @Args()
-        { comment, taskId, userId }: AddCommentType,
-        @Ctx() ctx: { prisma: any }
-    ) {
-        return this?.commentService?.save(ctx, comment, userId, taskId);
+    async addComment(@Arg('data') data: AddCommentInput, @Ctx() ctx: IContext) {
+        return this?.commentService?.save(ctx, data);
     }
 
     @Mutation(() => Comment, {
         description: 'Delete comment by id',
     })
-    async deleteComment(
-        @Args() { id }: DeleteCommentType,
-        @Ctx() ctx: { prisma: any }
-    ) {
+    async deleteComment(@Arg('id') id: string, @Ctx() ctx: IContext) {
         return this?.commentService?.deleteOne(ctx, id);
     }
 
@@ -45,16 +46,11 @@ class CommentResolver {
         description: 'Update comment by id',
     })
     async updateComment(
-        @Args() { id, comment, taskId, userId }: UpdateCommentType,
-        @Ctx() ctx: { prisma: any }
+        @Arg('id') id: string,
+        @Arg('data') data: UpdateCommentInput,
+        @Ctx() ctx: IContext
     ) {
-        return this?.commentService?.updateOne(
-            ctx,
-            id,
-            comment,
-            taskId,
-            userId
-        );
+        return this?.commentService?.updateOne(ctx, id, data);
     }
 }
 

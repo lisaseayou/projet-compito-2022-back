@@ -1,8 +1,10 @@
 import { Service } from 'typedi';
+import AddDocumentInput from '../inputs/documents/AddDocument.input';
+import { IContext } from '../interfaces';
 
 @Service()
 class DocumentService {
-    async findAll(ctx: any) {
+    async findAll(ctx: IContext) {
         return ctx.prisma.document.findMany({
             include: {
                 task: true,
@@ -10,7 +12,18 @@ class DocumentService {
         });
     }
 
-    async save(ctx: any, name: string, size: number, taskId: string) {
+    async findOne(ctx: IContext, id: string) {
+        return ctx.prisma.document.findUnique({
+            where: { id },
+            include: {
+                task: true,
+            },
+        });
+    }
+
+    async save(ctx: IContext, data: AddDocumentInput) {
+        const { name, size, taskId } = data;
+
         const documentToDb = await ctx.prisma.document.create({
             data: {
                 name,
@@ -26,7 +39,7 @@ class DocumentService {
         return documentToDb;
     }
 
-    async deleteOne(ctx: any, id: string) {
+    async deleteOne(ctx: IContext, id: string) {
         const currentDocument = ctx.prisma.document.delete({
             where: { id },
             include: {

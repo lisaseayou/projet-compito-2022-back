@@ -1,10 +1,10 @@
-import { Resolver, Query, Ctx, Mutation, Args } from 'type-graphql';
+import { Arg, Resolver, Query, Ctx, Mutation } from 'type-graphql';
 import { Service } from 'typedi';
 import Project from '../models/Project.model';
-import AddProjectType from '../input/projects/AddProject.input';
-import DeleteProjectType from '../input/Delete.input';
-import UpdateProjectType from '../input/projects/UpdateProject.input';
 import ProjectService from '../services/Project.service';
+import AddProjectInput from '../inputs/projects/AddProject.input';
+import UpdateProjectInput from '../inputs/projects/UpdateProject.input';
+import { IContext } from '../interfaces';
 
 @Service()
 @Resolver(Project)
@@ -15,7 +15,7 @@ class ProjectResolver {
         description: 'Get all projects',
         nullable: true,
     })
-    async allProjects(@Ctx() ctx: { prisma: any }) {
+    async allProjects(@Ctx() ctx: IContext) {
         return this?.projectService?.findAll(ctx);
     }
 
@@ -23,10 +23,7 @@ class ProjectResolver {
         description: 'Get one project by id',
         nullable: false,
     })
-    async project(
-        @Args() { id }: DeleteProjectType,
-        @Ctx() ctx: { prisma: any }
-    ) {
+    async project(@Arg('id') id: string, @Ctx() ctx: IContext) {
         return this?.projectService?.findOne(ctx, id);
     }
 
@@ -34,20 +31,14 @@ class ProjectResolver {
         description: 'Add new project',
         nullable: false,
     })
-    async addProject(
-        @Args() { name, description, userId }: AddProjectType,
-        @Ctx() ctx: { prisma: any }
-    ) {
-        return this?.projectService?.save(ctx, name, description, userId);
+    async addProject(@Arg('data') data: AddProjectInput, @Ctx() ctx: IContext) {
+        return this?.projectService?.save(ctx, data);
     }
 
     @Mutation(() => Project, {
         description: 'Delete project by id',
     })
-    async deleteProject(
-        @Args() { id }: DeleteProjectType,
-        @Ctx() ctx: { prisma: any }
-    ) {
+    async deleteProject(@Arg('id') id: string, @Ctx() ctx: IContext) {
         return this?.projectService?.deleteOne(ctx, id);
     }
 
@@ -55,16 +46,11 @@ class ProjectResolver {
         description: 'Update project by id',
     })
     async updateProject(
-        @Args() { id, name, description, userId }: UpdateProjectType,
-        @Ctx() ctx: { prisma: any }
+        @Arg('id') id: string,
+        @Arg('data') data: UpdateProjectInput,
+        @Ctx() ctx: IContext
     ) {
-        return this?.projectService?.updateOne(
-            ctx,
-            id,
-            name,
-            description,
-            userId
-        );
+        return this?.projectService?.updateOne(ctx, id, data);
     }
 }
 

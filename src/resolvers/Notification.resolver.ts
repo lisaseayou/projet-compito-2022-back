@@ -1,10 +1,10 @@
-import { Resolver, Query, Ctx, Mutation, Args } from 'type-graphql';
+import { Resolver, Query, Ctx, Mutation, Arg } from 'type-graphql';
 import { Service } from 'typedi';
 import Notification from '../models/Notification.model';
-import AddNotificationType from '../input/notifications/AddNotification.input';
-import DeleteNotificationType from '../input/Delete.input';
-import UpdateNotificationType from '../input/notifications/UpdateNotification.input';
 import NotificationService from '../services/Notification.service';
+import UpdateNotificationInput from '../inputs/notifications/UpdateNotification.input';
+import AddNotificationInput from '../inputs/notifications/AddNotification.input';
+import { IContext } from '../interfaces';
 
 @Service()
 @Resolver(Notification)
@@ -15,8 +15,16 @@ class NotificationResolver {
         description: 'Get all notifications',
         nullable: true,
     })
-    async allNotifications(@Ctx() ctx: { prisma: any }) {
+    async allNotifications(@Ctx() ctx: IContext) {
         return this?.notificationService?.findAll(ctx);
+    }
+
+    @Query(() => Notification, {
+        description: 'Get one notification by id',
+        nullable: false,
+    })
+    async notification(@Arg('id') id: string, @Ctx() ctx: IContext) {
+        return this?.notificationService?.findOne(ctx, id);
     }
 
     @Mutation(() => Notification, {
@@ -24,24 +32,16 @@ class NotificationResolver {
         nullable: false,
     })
     async addNotification(
-        @Args() { description, isRead, userId }: AddNotificationType,
-        @Ctx() ctx: { prisma: any }
+        @Arg('data') data: AddNotificationInput,
+        @Ctx() ctx: IContext
     ) {
-        return this?.notificationService?.save(
-            ctx,
-            description,
-            isRead,
-            userId
-        );
+        return this?.notificationService?.save(ctx, data);
     }
 
     @Mutation(() => Notification, {
         description: 'Delete notification by id',
     })
-    async deleteNotification(
-        @Args() { id }: DeleteNotificationType,
-        @Ctx() ctx: { prisma: any }
-    ) {
+    async deleteNotification(@Arg('id') id: string, @Ctx() ctx: IContext) {
         return this?.notificationService?.deleteOne(ctx, id);
     }
 
@@ -49,16 +49,11 @@ class NotificationResolver {
         description: 'Update notification by id',
     })
     async updateNotification(
-        @Args() { id, description, isRead, userId }: UpdateNotificationType,
-        @Ctx() ctx: { prisma: any }
+        @Arg('id') id: string,
+        @Arg('data') data: UpdateNotificationInput,
+        @Ctx() ctx: IContext
     ) {
-        return this?.notificationService?.updateOne(
-            ctx,
-            id,
-            description,
-            isRead,
-            userId
-        );
+        return this?.notificationService?.updateOne(ctx, id, data);
     }
 }
 

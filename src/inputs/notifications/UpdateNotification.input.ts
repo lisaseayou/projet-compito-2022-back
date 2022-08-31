@@ -1,14 +1,14 @@
-import { ArgsType, Field, ID } from 'type-graphql';
+import { Length } from 'class-validator';
+import { InputType, Field } from 'type-graphql';
+import errors from '../../utils/validation';
 
-@ArgsType()
-class UpdateNotificationType {
-    @Field(() => ID, { description: 'Id of the notification' })
-    id: string;
-
+@InputType()
+class UpdateNotificationInput {
     @Field(() => String, {
         nullable: true,
         description: 'Description of the notification',
     })
+    @Length(3, 250, { message: errors.notification.description })
     description?: string;
 
     @Field(() => Boolean, {
@@ -23,4 +23,4 @@ class UpdateNotificationType {
     userId: string;
 }
 
-export default UpdateNotificationType;
+export default UpdateNotificationInput;

@@ -1,8 +1,11 @@
-import { ArgsType, Field, Int } from 'type-graphql';
+import { Length } from 'class-validator';
+import { InputType, Field, Int } from 'type-graphql';
+import errors from '../../utils/validation';
 
-@ArgsType()
+@InputType()
 class AddTaskInput {
     @Field(() => String)
+    @Length(3, 100, { message: errors.task.subject })
     subject: string;
 
     @Field(() => String)

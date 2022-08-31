@@ -1,8 +1,11 @@
 import { Service } from 'typedi';
+import AddCommentInput from '../inputs/comments/AddComment.input';
+import UpdateCommentInput from '../inputs/comments/UpdateComment.input';
+import { IContext } from '../interfaces';
 
 @Service()
 class CommentService {
-    async findAll(ctx: any) {
+    async findAll(ctx: IContext) {
         return ctx.prisma.comment.findMany({
             include: {
                 task: true,
@@ -11,7 +14,19 @@ class CommentService {
         });
     }
 
-    async save(ctx: any, comment: string, userId: string, taskId?: string) {
+    async findOne(ctx: IContext, id: string) {
+        return ctx.prisma.comment.findUnique({
+            where: { id },
+            include: {
+                task: true,
+                user: true,
+            },
+        });
+    }
+
+    async save(ctx: IContext, data: AddCommentInput) {
+        const { comment, userId, taskId } = data;
+
         const commentToDb = await ctx.prisma.comment.create({
             data: {
                 comment,
@@ -30,13 +45,8 @@ class CommentService {
         return commentToDb;
     }
 
-    async updateOne(
-        ctx: any,
-        id: string,
-        comment?: string,
-        taskId?: string,
-        userId?: string
-    ) {
+    async updateOne(ctx: IContext, id: string, data: UpdateCommentInput) {
+        const { comment, taskId, userId } = data;
         const commentToUpdate = ctx.prisma.comment.findUnique({
             where: { id },
         });
@@ -64,7 +74,7 @@ class CommentService {
         return commentUpdated;
     }
 
-    async deleteOne(ctx: any, id: string) {
+    async deleteOne(ctx: IContext, id: string) {
         const currentComment = ctx.prisma.comment.delete({
             where: { id },
             include: {

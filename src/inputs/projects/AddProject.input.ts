@@ -1,8 +1,11 @@
-import { ArgsType, Field } from 'type-graphql';
+import { Length } from 'class-validator';
+import { InputType, Field } from 'type-graphql';
+import errors from '../../utils/validation';
 
-@ArgsType()
+@InputType()
 class AddProjectInput {
     @Field(() => String, { description: 'Name of the project' })
+    @Length(3, 100, { message: errors.project.name })
     name: string;
 
     @Field(() => String, { description: 'Description of the project' })

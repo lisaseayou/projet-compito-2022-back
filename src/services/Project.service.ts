@@ -1,8 +1,13 @@
 import { Service } from 'typedi';
+import UpdateProjectInput from '../inputs/projects/UpdateProject.input';
+import AddProjectInput from '../inputs/projects/AddProject.input';
+import { IContext } from '../interfaces';
+import RecordNotFoundError from '../errors/RecordNotFound.error';
+import DeleteNotFoundError from '../errors/DeleteNotFound.error';
 
 @Service()
 class ProjectService {
-    async findAll(ctx: any) {
+    async findAll(ctx: IContext) {
         return ctx.prisma.project.findMany({
             include: {
                 tasks: true,
@@ -11,17 +16,22 @@ class ProjectService {
         });
     }
 
-    async findOne(ctx: any, id: string) {
+    async findOne(ctx: IContext, id: string) {
         return ctx.prisma.project.findUnique({
             where: { id },
             include: {
                 tasks: true,
                 users: true,
             },
+            rejectOnNotFound: new RecordNotFoundError(
+                "Le projet avec cet id n'existe pas"
+            ),
         });
     }
 
-    async save(ctx: any, name: string, description: string, userId: string) {
+    async save(ctx: IContext, data: AddProjectInput) {
+        const { name, description, userId } = data;
+
         const projectToDb = await ctx.prisma.project.create({
             data: {
                 name,
@@ -39,13 +49,9 @@ class ProjectService {
         return projectToDb;
     }
 
-    async updateOne(
-        ctx: any,
-        id: string,
-        name?: string,
-        description?: string,
-        userId?: string
-    ) {
+    async updateOne(ctx: IContext, id: string, data: UpdateProjectInput) {
+        const { name, description, userId } = data;
+
         const projectUpdated = ctx.prisma.project.update({
             where: { id },
             data: {
@@ -65,14 +71,21 @@ class ProjectService {
         return projectUpdated;
     }
 
-    async deleteOne(ctx: any, id: string) {
-        const currentProject = ctx.prisma.project.delete({
-            where: { id },
-            include: {
-                tasks: true,
-                users: true,
-            },
-        });
+    async deleteOne(ctx: IContext, id: string) {
+        const currentProject = await ctx.prisma.project
+            .delete({
+                where: { id },
+                include: {
+                    tasks: true,
+                    users: true,
+                },
+            })
+            .catch(() => {
+                throw new DeleteNotFoundError(
+                    "Le projet à supprimer n'existe pas"
+                );
+            });
+
         return currentProject;
     }
 }

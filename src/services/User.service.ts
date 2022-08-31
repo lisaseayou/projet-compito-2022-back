@@ -1,11 +1,14 @@
 import { ApolloError } from 'apollo-server-express';
 import { Service } from 'typedi';
 import * as bcrypt from 'bcrypt';
+import UpdateUserInput from '../inputs/users/UpdateUser.input';
+import AddUserInput from '../inputs/users/AddUser.input';
 import generateToken from '../utils/auth';
+import { IContext } from '../interfaces';
 
 @Service()
 class UserService {
-    async findAll(ctx: any) {
+    async findAll(ctx: IContext) {
         return ctx.prisma.user.findMany({
             include: {
                 notifications: true,
@@ -16,16 +19,18 @@ class UserService {
         });
     }
 
-    async register(ctx: any, data: any) {
+    async register(ctx: IContext, data: AddUserInput) {
+        const { name, email, roles, password } = data;
+
         // hash the password
         const salt = await bcrypt.genSalt(10);
-        const passwordHashed = await bcrypt.hash(data.password, salt);
+        const passwordHashed = await bcrypt.hash(password, salt);
 
         // generate the token of connection
         const token = generateToken({
-            name: data.name,
-            email: data.email,
-            roles: data.roles,
+            name,
+            email,
+            roles,
         });
 
         const userToDb = await ctx.prisma.user.create({
@@ -54,7 +59,7 @@ class UserService {
         return { ...userToDb, success: true };
     }
 
-    async login(ctx: any, email: string, password: string) {
+    async login(ctx: IContext, email: string, password: string) {
         // check if user exist
         const user = ctx.prisma.user.findUnique({
             where: { email },
@@ -86,14 +91,9 @@ class UserService {
         return { ...user, success: false };
     }
 
-    async updateOne(
-        ctx: any,
-        id: string,
-        name?: string,
-        email?: string,
-        roles?: string[],
-        password?: string
-    ) {
+    async updateOne(ctx: IContext, id: string, data: UpdateUserInput) {
+        const { name, email, roles, password } = data;
+
         const userToUpdate = ctx.prisma.user.findUnique({
             where: { id },
         });
@@ -116,7 +116,7 @@ class UserService {
         return userUpdated;
     }
 
-    async deleteOne(ctx: any, id: string) {
+    async deleteOne(ctx: IContext, id: string) {
         const currentUser = ctx.prisma.user.delete({
             where: { id },
             include: {

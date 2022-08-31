@@ -1,11 +1,11 @@
-import { Resolver, Query, Ctx, Mutation, Args } from 'type-graphql';
+import { Arg, Resolver, Query, Ctx, Mutation, Args } from 'type-graphql';
 import { Service } from 'typedi';
 import User from '../models/User.model';
-import AddUserType from '../input/users/AddUser.input';
-import DeleteUserType from '../input/Delete.input';
-import UpdateUserType from '../input/users/UpdateUser.input';
 import UserService from '../services/User.service';
-import LoginUserType from '../input/users/LoginUser.input';
+import AddUserInput from '../inputs/users/AddUser.input';
+import LoginUserArgs from '../args/users/LoginUser.args';
+import UpdateUserInput from '../inputs/users/UpdateUser.input';
+import { IContext } from '../interfaces';
 
 @Service()
 @Resolver(User)
@@ -16,7 +16,7 @@ class UserResolver {
         description: 'Get all users',
         nullable: true,
     })
-    async allUsers(@Ctx() ctx: { prisma: any }) {
+    async allUsers(@Ctx() ctx: IContext) {
         return this?.userService?.findAll(ctx);
     }
 
@@ -24,25 +24,16 @@ class UserResolver {
         description: 'Register new user',
         nullable: false,
     })
-    async register(
-        @Args()
-        { name, email, roles, password }: AddUserType,
-        @Ctx() ctx: { prisma: any }
-    ) {
-        return this?.userService?.register(ctx, {
-            name,
-            email,
-            roles,
-            password,
-        });
+    async register(@Arg('data') data: AddUserInput, @Ctx() ctx: IContext) {
+        return this?.userService?.register(ctx, data);
     }
 
     @Query(() => User, {
         description: 'Login user',
     })
     async login(
-        @Args() { email, password }: LoginUserType,
-        @Ctx() ctx: { prisma: any }
+        @Args() { email, password }: LoginUserArgs,
+        @Ctx() ctx: IContext
     ) {
         return this?.userService?.login(ctx, email, password);
     }
@@ -50,10 +41,7 @@ class UserResolver {
     @Mutation(() => User, {
         description: 'Delete user by id',
     })
-    async deleteUser(
-        @Args() { id }: DeleteUserType,
-        @Ctx() ctx: { prisma: any }
-    ) {
+    async deleteUser(@Arg('id') id: string, @Ctx() ctx: IContext) {
         return this?.userService?.deleteOne(ctx, id);
     }
 
@@ -61,17 +49,11 @@ class UserResolver {
         description: 'Update user by id',
     })
     async updateUser(
-        @Args() { id, name, email, roles, password }: UpdateUserType,
-        @Ctx() ctx: { prisma: any }
+        @Arg('id') id: string,
+        @Arg('data') data: UpdateUserInput,
+        @Ctx() ctx: IContext
     ) {
-        return this?.userService?.updateOne(
-            ctx,
-            id,
-            name,
-            email,
-            roles,
-            password
-        );
+        return this?.userService?.updateOne(ctx, id, data);
     }
 }
 

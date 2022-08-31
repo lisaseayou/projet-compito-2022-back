@@ -1,8 +1,12 @@
 import { Service } from 'typedi';
+import AddTaskInput from '../inputs/tasks/AddTask.input';
+import UpdateTaskInput from '../inputs/tasks/UpdateTask.input';
+import { IContext } from '../interfaces';
+import RecordNotFoundError from '../errors/RecordNotFound.error';
 
 @Service()
 class TaskService {
-    async findAll(ctx: any) {
+    async findAll(ctx: IContext) {
         return ctx.prisma.task.findMany({
             include: {
                 project: true,
@@ -13,17 +17,33 @@ class TaskService {
         });
     }
 
-    async save(
-        ctx: any,
-        subject: string,
-        status: string,
-        dueDate: string,
-        initialSpentTime: number,
-        additionalSpentTime: number[],
-        advancement: number,
-        projectId: string,
-        userId: string
-    ) {
+    async findOne(ctx: IContext, id: string) {
+        return ctx.prisma.task.findUnique({
+            where: { id },
+            include: {
+                project: true,
+                comments: true,
+                documents: true,
+                users: true,
+            },
+            rejectOnNotFound: new RecordNotFoundError(
+                "Le projet avec cet id n'existe pas"
+            ),
+        });
+    }
+
+    async save(ctx: IContext, data: AddTaskInput) {
+        const {
+            subject,
+            status,
+            dueDate,
+            initialSpentTime,
+            additionalSpentTime,
+            advancement,
+            projectId,
+            userId,
+        } = data;
+
         const taskToDb = await ctx.prisma.task.create({
             data: {
                 subject,
@@ -49,17 +69,16 @@ class TaskService {
         return taskToDb;
     }
 
-    async updateOne(
-        ctx: any,
-        id: string,
-        subject?: string,
-        status?: string,
-        dueDate?: string,
-        additionalSpentTime?: number[],
-        advancement?: number,
-        projectId?: string,
-        userId?: string
-    ) {
+    async updateOne(ctx: IContext, id: string, data: UpdateTaskInput) {
+        const {
+            subject,
+            status,
+            dueDate,
+            additionalSpentTime,
+            advancement,
+            projectId,
+            userId,
+        } = data;
         const taskToUpdate = ctx.prisma.task.findUnique({
             where: { id },
         });
@@ -93,7 +112,7 @@ class TaskService {
         return taskUpdated;
     }
 
-    async deleteOne(ctx: any, id: string) {
+    async deleteOne(ctx: IContext, id: string) {
         const currentTask = ctx.prisma.task.delete({
             where: {
                 id,

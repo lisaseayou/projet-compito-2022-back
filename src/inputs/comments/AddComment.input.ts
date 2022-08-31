@@ -1,11 +1,11 @@
-import { ArgsType, Field, ID } from 'type-graphql';
+import { Length } from 'class-validator';
+import { InputType, Field } from 'type-graphql';
+import errors from '../../utils/validation';
 
-@ArgsType()
-class UpdateCommentType {
-    @Field(() => ID, { description: 'Id of the comment' })
-    id: string;
-
+@InputType()
+class AddCommentInput {
     @Field(() => String, { description: 'Content of the comment' })
+    @Length(2, 100, { message: errors.comment.comment })
     comment: string;
 
     @Field(() => String, {
@@ -15,9 +15,10 @@ class UpdateCommentType {
     taskId?: string;
 
     @Field(() => String, {
+        nullable: true,
         description: 'ID of the user to link to the comment',
     })
     userId: string;
 }
 
-export default UpdateCommentType;
+export default AddCommentInput;

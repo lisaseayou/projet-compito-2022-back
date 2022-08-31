@@ -1,7 +1,7 @@
 import { ArgsType, Field } from 'type-graphql';
 
 @ArgsType()
-class LoginUserInput {
+class LoginUserArgs {
     @Field(() => String, { description: 'Name of the user' })
     email: string;
 
@@ -9,4 +9,4 @@ class LoginUserInput {
     password: string;
 }
 
-export default LoginUserInput;
+export default LoginUserArgs;
