@@ -5,6 +5,7 @@ import UserService from '../services/User.service';
 import AddUserInput from '../inputs/users/AddUser.input';
 import LoginUserArgs from '../args/users/LoginUser.args';
 import UpdateUserInput from '../inputs/users/UpdateUser.input';
+import { IContext } from '../interfaces';
 
 @Service()
 @Resolver(User)
@@ -15,7 +16,7 @@ class UserResolver {
         description: 'Get all users',
         nullable: true,
     })
-    async allUsers(@Ctx() ctx: { prisma: any }) {
+    async allUsers(@Ctx() ctx: IContext) {
         return this?.userService?.findAll(ctx);
     }
 
@@ -23,10 +24,7 @@ class UserResolver {
         description: 'Register new user',
         nullable: false,
     })
-    async register(
-        @Arg('data') data: AddUserInput,
-        @Ctx() ctx: { prisma: any }
-    ) {
+    async register(@Arg('data') data: AddUserInput, @Ctx() ctx: IContext) {
         return this?.userService?.register(ctx, data);
     }
 
@@ -35,7 +33,7 @@ class UserResolver {
     })
     async login(
         @Args() { email, password }: LoginUserArgs,
-        @Ctx() ctx: { prisma: any }
+        @Ctx() ctx: IContext
     ) {
         return this?.userService?.login(ctx, email, password);
     }
@@ -43,7 +41,7 @@ class UserResolver {
     @Mutation(() => User, {
         description: 'Delete user by id',
     })
-    async deleteUser(@Arg('id') id: string, @Ctx() ctx: { prisma: any }) {
+    async deleteUser(@Arg('id') id: string, @Ctx() ctx: IContext) {
         return this?.userService?.deleteOne(ctx, id);
     }
 
@@ -53,7 +51,7 @@ class UserResolver {
     async updateUser(
         @Arg('id') id: string,
         @Arg('data') data: UpdateUserInput,
-        @Ctx() ctx: { prisma: any }
+        @Ctx() ctx: IContext
     ) {
         return this?.userService?.updateOne(ctx, id, data);
     }

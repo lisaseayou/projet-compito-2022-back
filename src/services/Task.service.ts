@@ -1,10 +1,11 @@
 import { Service } from 'typedi';
 import AddTaskInput from '../inputs/tasks/AddTask.input';
 import UpdateTaskInput from '../inputs/tasks/UpdateTask.input';
+import { IContext } from '../interfaces';
 
 @Service()
 class TaskService {
-    async findAll(ctx: any) {
+    async findAll(ctx: IContext) {
         return ctx.prisma.task.findMany({
             include: {
                 project: true,
@@ -15,7 +16,7 @@ class TaskService {
         });
     }
 
-    async save(ctx: any, data: AddTaskInput) {
+    async save(ctx: IContext, data: AddTaskInput) {
         const {
             subject,
             status,
@@ -52,7 +53,7 @@ class TaskService {
         return taskToDb;
     }
 
-    async updateOne(ctx: any, id: string, data: UpdateTaskInput) {
+    async updateOne(ctx: IContext, id: string, data: UpdateTaskInput) {
         const {
             subject,
             status,
@@ -95,7 +96,7 @@ class TaskService {
         return taskUpdated;
     }
 
-    async deleteOne(ctx: any, id: string) {
+    async deleteOne(ctx: IContext, id: string) {
         const currentTask = ctx.prisma.task.delete({
             where: {
                 id,

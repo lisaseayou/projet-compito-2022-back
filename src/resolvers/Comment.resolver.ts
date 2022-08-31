@@ -4,17 +4,18 @@ import Comment from '../models/Comment.model';
 import CommentService from '../services/Comment.service';
 import AddCommentInput from '../inputs/comments/AddComment.input';
 import UpdateCommentInput from '../inputs/comments/UpdateComment.input';
+import { IContext } from '../interfaces';
 
 @Service()
 @Resolver(Comment)
 class CommentResolver {
-    constructor(private readonly commentService: CommentService) { }
+    constructor(private readonly commentService: CommentService) {}
 
     @Query(() => [Comment, Query], {
         description: 'Get all comments',
         nullable: true,
     })
-    async allComments(@Ctx() ctx: { prisma: any }) {
+    async allComments(@Ctx() ctx: IContext) {
         return this?.commentService?.findAll(ctx);
     }
 
@@ -22,17 +23,14 @@ class CommentResolver {
         description: 'Add new comment',
         nullable: false,
     })
-    async addComment(
-        @Arg("data") data: AddCommentInput,
-        @Ctx() ctx: { prisma: any }
-    ) {
+    async addComment(@Arg('data') data: AddCommentInput, @Ctx() ctx: IContext) {
         return this?.commentService?.save(ctx, data);
     }
 
     @Mutation(() => Comment, {
         description: 'Delete comment by id',
     })
-    async deleteComment(@Arg('id') id: string, @Ctx() ctx: { prisma: any }) {
+    async deleteComment(@Arg('id') id: string, @Ctx() ctx: IContext) {
         return this?.commentService?.deleteOne(ctx, id);
     }
 
@@ -42,7 +40,7 @@ class CommentResolver {
     async updateComment(
         @Arg('id') id: string,
         @Arg('data') data: UpdateCommentInput,
-        @Ctx() ctx: { prisma: any }
+        @Ctx() ctx: IContext
     ) {
         return this?.commentService?.updateOne(ctx, id, data);
     }

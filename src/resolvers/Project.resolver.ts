@@ -4,6 +4,7 @@ import Project from '../models/Project.model';
 import ProjectService from '../services/Project.service';
 import AddProjectInput from '../inputs/projects/AddProject.input';
 import UpdateProjectInput from '../inputs/projects/UpdateProject.input';
+import { IContext } from '../interfaces';
 
 @Service()
 @Resolver(Project)
@@ -14,7 +15,7 @@ class ProjectResolver {
         description: 'Get all projects',
         nullable: true,
     })
-    async allProjects(@Ctx() ctx: { prisma: any }) {
+    async allProjects(@Ctx() ctx: IContext) {
         return this?.projectService?.findAll(ctx);
     }
 
@@ -22,7 +23,7 @@ class ProjectResolver {
         description: 'Get one project by id',
         nullable: false,
     })
-    async project(@Arg('id') id: string, @Ctx() ctx: { prisma: any }) {
+    async project(@Arg('id') id: string, @Ctx() ctx: IContext) {
         return this?.projectService?.findOne(ctx, id);
     }
 
@@ -30,17 +31,14 @@ class ProjectResolver {
         description: 'Add new project',
         nullable: false,
     })
-    async addProject(
-        @Arg('data') data: AddProjectInput,
-        @Ctx() ctx: { prisma: any }
-    ) {
+    async addProject(@Arg('data') data: AddProjectInput, @Ctx() ctx: IContext) {
         return this?.projectService?.save(ctx, data);
     }
 
     @Mutation(() => Project, {
         description: 'Delete project by id',
     })
-    async deleteProject(@Arg('id') id: string, @Ctx() ctx: { prisma: any }) {
+    async deleteProject(@Arg('id') id: string, @Ctx() ctx: IContext) {
         return this?.projectService?.deleteOne(ctx, id);
     }
 
@@ -50,7 +48,7 @@ class ProjectResolver {
     async updateProject(
         @Arg('id') id: string,
         @Arg('data') data: UpdateProjectInput,
-        @Ctx() ctx: { prisma: any }
+        @Ctx() ctx: IContext
     ) {
         return this?.projectService?.updateOne(ctx, id, data);
     }

@@ -1,10 +1,11 @@
 import { Service } from 'typedi';
 import AddNotificationInput from '../inputs/notifications/AddNotification.input';
 import UpdateNotificationInput from '../inputs/notifications/UpdateNotification.input';
+import { IContext } from '../interfaces';
 
 @Service()
 class NotificationService {
-    async findAll(ctx: any) {
+    async findAll(ctx: IContext) {
         return ctx.prisma.notification.findMany({
             include: {
                 user: true,
@@ -12,10 +13,7 @@ class NotificationService {
         });
     }
 
-    async save(
-        ctx: any,
-        data: AddNotificationInput
-    ) {
+    async save(ctx: IContext, data: AddNotificationInput) {
         const { description, isRead, userId } = data;
 
         const notificationToDb = await ctx.prisma.notification.create({
@@ -35,11 +33,7 @@ class NotificationService {
         return notificationToDb;
     }
 
-    async updateOne(
-        ctx: any,
-        id: string,
-        data: UpdateNotificationInput
-    ) {
+    async updateOne(ctx: IContext, id: string, data: UpdateNotificationInput) {
         const { description, isRead, userId } = data;
 
         const notifToUpdate = ctx.prisma.notification.findUnique({
@@ -65,7 +59,7 @@ class NotificationService {
         return notificationToUpdate;
     }
 
-    async deleteOne(ctx: any, id: string) {
+    async deleteOne(ctx: IContext, id: string) {
         const currentNotification = ctx.prisma.notification.delete({
             where: { id },
             include: {

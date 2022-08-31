@@ -1,10 +1,11 @@
 import { Service } from 'typedi';
 import UpdateProjectInput from '../inputs/projects/UpdateProject.input';
 import AddProjectInput from '../inputs/projects/AddProject.input';
+import { IContext } from '../interfaces';
 
 @Service()
 class ProjectService {
-    async findAll(ctx: any) {
+    async findAll(ctx: IContext) {
         return ctx.prisma.project.findMany({
             include: {
                 tasks: true,
@@ -13,7 +14,7 @@ class ProjectService {
         });
     }
 
-    async findOne(ctx: any, id: string) {
+    async findOne(ctx: IContext, id: string) {
         return ctx.prisma.project.findUnique({
             where: { id },
             include: {
@@ -23,7 +24,7 @@ class ProjectService {
         });
     }
 
-    async save(ctx: any, data: AddProjectInput) {
+    async save(ctx: IContext, data: AddProjectInput) {
         const { name, description, userId } = data;
 
         const projectToDb = await ctx.prisma.project.create({
@@ -43,7 +44,7 @@ class ProjectService {
         return projectToDb;
     }
 
-    async updateOne(ctx: any, id: string, data: UpdateProjectInput) {
+    async updateOne(ctx: IContext, id: string, data: UpdateProjectInput) {
         const { name, description, userId } = data;
 
         const projectUpdated = ctx.prisma.project.update({
@@ -65,7 +66,7 @@ class ProjectService {
         return projectUpdated;
     }
 
-    async deleteOne(ctx: any, id: string) {
+    async deleteOne(ctx: IContext, id: string) {
         const currentProject = ctx.prisma.project.delete({
             where: { id },
             include: {

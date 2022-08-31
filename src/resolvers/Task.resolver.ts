@@ -4,6 +4,7 @@ import Task from '../models/Task.model';
 import TaskService from '../services/Task.service';
 import AddTaskInput from '../inputs/tasks/AddTask.input';
 import UpdateTaskInput from '../inputs/tasks/UpdateTask.input';
+import { IContext } from '../interfaces';
 
 @Service()
 @Resolver(Task)
@@ -14,7 +15,7 @@ class TaskResolver {
         description: 'Get all tasks',
         nullable: true,
     })
-    async allTasks(@Ctx() ctx: { prisma: any }) {
+    async allTasks(@Ctx() ctx: IContext) {
         return this?.taskService?.findAll(ctx);
     }
 
@@ -22,10 +23,7 @@ class TaskResolver {
         description: 'Add new task',
         nullable: false,
     })
-    async addTask(
-        @Arg('data') data: AddTaskInput,
-        @Ctx() ctx: { prisma: any }
-    ) {
+    async addTask(@Arg('data') data: AddTaskInput, @Ctx() ctx: IContext) {
         return this?.taskService?.save(
             ctx,
 
@@ -36,7 +34,7 @@ class TaskResolver {
     @Mutation(() => Task, {
         description: 'Delete task by id',
     })
-    async deleteTask(@Arg('id') id: string, @Ctx() ctx: { prisma: any }) {
+    async deleteTask(@Arg('id') id: string, @Ctx() ctx: IContext) {
         return this?.taskService?.deleteOne(ctx, id);
     }
 
@@ -46,7 +44,7 @@ class TaskResolver {
     async updateTask(
         @Arg('id') id: string,
         @Arg('data') data: UpdateTaskInput,
-        @Ctx() ctx: { prisma: any }
+        @Ctx() ctx: IContext
     ) {
         return this?.taskService?.updateOne(ctx, id, data);
     }
