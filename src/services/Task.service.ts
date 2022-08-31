@@ -16,6 +16,18 @@ class TaskService {
         });
     }
 
+    async findOne(ctx: IContext, id: string) {
+        return ctx.prisma.task.findUnique({
+            where: { id },
+            include: {
+                project: true,
+                comments: true,
+                documents: true,
+                users: true,
+            },
+        });
+    }
+
     async save(ctx: IContext, data: AddTaskInput) {
         const {
             subject,

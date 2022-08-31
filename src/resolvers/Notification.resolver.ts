@@ -19,6 +19,14 @@ class NotificationResolver {
         return this?.notificationService?.findAll(ctx);
     }
 
+    @Query(() => Notification, {
+        description: 'Get one notification by id',
+        nullable: false,
+    })
+    async notification(@Arg('id') id: string, @Ctx() ctx: IContext) {
+        return this?.notificationService?.findOne(ctx, id);
+    }
+
     @Mutation(() => Notification, {
         description: 'Add new notification',
         nullable: false,

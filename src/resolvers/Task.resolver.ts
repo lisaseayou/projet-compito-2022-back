@@ -19,6 +19,14 @@ class TaskResolver {
         return this?.taskService?.findAll(ctx);
     }
 
+    @Query(() => Task, {
+        description: 'Get one task by id',
+        nullable: false,
+    })
+    async task(@Arg('id') id: string, @Ctx() ctx: IContext) {
+        return this?.taskService?.findOne(ctx, id);
+    }
+
     @Mutation(() => Task, {
         description: 'Add new task',
         nullable: false,

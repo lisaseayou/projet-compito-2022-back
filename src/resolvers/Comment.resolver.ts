@@ -19,6 +19,14 @@ class CommentResolver {
         return this?.commentService?.findAll(ctx);
     }
 
+    @Query(() => Comment, {
+        description: 'Get one comment by id',
+        nullable: false,
+    })
+    async comment(@Arg('id') id: string, @Ctx() ctx: IContext) {
+        return this?.commentService?.findOne(ctx, id);
+    }
+
     @Mutation(() => Comment, {
         description: 'Add new comment',
         nullable: false,

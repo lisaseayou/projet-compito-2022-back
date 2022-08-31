@@ -17,6 +17,14 @@ class DocumentResolver {
         return this?.documentService?.findAll(ctx);
     }
 
+    @Query(() => Document, {
+        description: 'Get one document by id',
+        nullable: false,
+    })
+    async document(@Arg('id') id: string, @Ctx() ctx: IContext) {
+        return this?.documentService?.findOne(ctx, id);
+    }
+
     @Mutation(() => Document, {
         description: 'Save new uploaded file',
     })

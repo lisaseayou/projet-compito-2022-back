@@ -14,6 +14,16 @@ class CommentService {
         });
     }
 
+    async findOne(ctx: IContext, id: string) {
+        return ctx.prisma.comment.findUnique({
+            where: { id },
+            include: {
+                task: true,
+                user: true,
+            },
+        });
+    }
+
     async save(ctx: IContext, data: AddCommentInput) {
         const { comment, userId, taskId } = data;
 

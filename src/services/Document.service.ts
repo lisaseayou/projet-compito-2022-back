@@ -12,6 +12,15 @@ class DocumentService {
         });
     }
 
+    async findOne(ctx: IContext, id: string) {
+        return ctx.prisma.document.findUnique({
+            where: { id },
+            include: {
+                task: true,
+            },
+        });
+    }
+
     async save(ctx: IContext, data: AddDocumentInput) {
         const { name, size, taskId } = data;
 

@@ -13,6 +13,15 @@ class NotificationService {
         });
     }
 
+    async findOne(ctx: IContext, id: string) {
+        return ctx.prisma.notification.findUnique({
+            where: { id },
+            include: {
+                user: true,
+            },
+        });
+    }
+
     async save(ctx: IContext, data: AddNotificationInput) {
         const { description, isRead, userId } = data;
 
