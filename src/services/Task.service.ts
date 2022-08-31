@@ -15,15 +15,27 @@ class TaskService {
 
     async save(
         ctx: any,
-        subject: string,
-        status: string,
-        dueDate: string,
-        initialSpentTime: number,
-        additionalSpentTime: number[],
-        advancement: number,
-        projectId: string,
-        userId: string
+        data: {
+            subject: string;
+            status: string;
+            dueDate: string;
+            initialSpentTime: number;
+            additionalSpentTime: number[];
+            advancement: number;
+            projectId: string;
+            userId: string;
+        }
     ) {
+        const {
+            subject,
+            status,
+            dueDate,
+            initialSpentTime,
+            additionalSpentTime,
+            advancement,
+            projectId,
+            userId,
+        } = data;
         const taskToDb = await ctx.prisma.task.create({
             data: {
                 subject,
@@ -52,14 +64,25 @@ class TaskService {
     async updateOne(
         ctx: any,
         id: string,
-        subject?: string,
-        status?: string,
-        dueDate?: string,
-        additionalSpentTime?: number[],
-        advancement?: number,
-        projectId?: string,
-        userId?: string
+        data: {
+            subject?: string;
+            status?: string;
+            dueDate?: string;
+            additionalSpentTime?: number[];
+            advancement?: number;
+            projectId?: string;
+            userId?: string;
+        }
     ) {
+        const {
+            subject,
+            status,
+            dueDate,
+            additionalSpentTime,
+            advancement,
+            projectId,
+            userId,
+        } = data;
         const taskToUpdate = ctx.prisma.task.findUnique({
             where: { id },
         });

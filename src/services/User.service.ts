@@ -16,16 +16,21 @@ class UserService {
         });
     }
 
-    async register(ctx: any, data: any) {
+    async register(
+        ctx: any,
+        data: { name: string; email: string; roles: string[]; password: string }
+    ) {
+        const { name, email, roles, password } = data;
+
         // hash the password
         const salt = await bcrypt.genSalt(10);
-        const passwordHashed = await bcrypt.hash(data.password, salt);
+        const passwordHashed = await bcrypt.hash(password, salt);
 
         // generate the token of connection
         const token = generateToken({
-            name: data.name,
-            email: data.email,
-            roles: data.roles,
+            name,
+            email,
+            roles,
         });
 
         const userToDb = await ctx.prisma.user.create({
@@ -89,11 +94,15 @@ class UserService {
     async updateOne(
         ctx: any,
         id: string,
-        name?: string,
-        email?: string,
-        roles?: string[],
-        password?: string
+        data: {
+            name?: string;
+            email?: string;
+            roles?: string[];
+            password?: string;
+        }
     ) {
+        const { name, email, roles, password } = data;
+
         const userToUpdate = ctx.prisma.user.findUnique({
             where: { id },
         });

@@ -21,7 +21,12 @@ class ProjectService {
         });
     }
 
-    async save(ctx: any, name: string, description: string, userId: string) {
+    async save(
+        ctx: any,
+        data: { name: string; description: string; userId: string }
+    ) {
+        const { name, description, userId } = data;
+
         const projectToDb = await ctx.prisma.project.create({
             data: {
                 name,
@@ -42,10 +47,14 @@ class ProjectService {
     async updateOne(
         ctx: any,
         id: string,
-        name?: string,
-        description?: string,
-        userId?: string
+        data: {
+            name?: string;
+            description?: string;
+            userId?: string;
+        }
     ) {
+        const { name, description, userId } = data;
+
         const projectUpdated = ctx.prisma.project.update({
             where: { id },
             data: {

@@ -1,10 +1,9 @@
-import { Resolver, Query, Ctx, Mutation, Args } from 'type-graphql';
+import { Resolver, Query, Ctx, Mutation, Arg } from 'type-graphql';
 import { Service } from 'typedi';
 import Task from '../models/Task.model';
-import AddTaskType from '../input/tasks/AddTask.input';
-import DeleteTaskType from '../input/Delete.input';
-import UpdateTaskType from '../input/tasks/UpdateTask.input';
 import TaskService from '../services/Task.service';
+import AddTaskInput from '../inputs/tasks/AddTask.input';
+import UpdateTaskInput from '../inputs/tasks/UpdateTask.input';
 
 @Service()
 @Resolver(Task)
@@ -24,40 +23,20 @@ class TaskResolver {
         nullable: false,
     })
     async addTask(
-        @Args()
-        {
-            subject,
-            status,
-            dueDate,
-            initialSpentTime,
-            additionalSpentTime,
-            advancement,
-            projectId,
-            userId,
-        }: AddTaskType,
+        @Arg('data') data: AddTaskInput,
         @Ctx() ctx: { prisma: any }
     ) {
         return this?.taskService?.save(
             ctx,
-            subject,
-            status,
-            dueDate,
-            initialSpentTime,
-            additionalSpentTime,
-            advancement,
-            projectId,
-            userId
+
+            data
         );
     }
 
     @Mutation(() => Task, {
         description: 'Delete task by id',
     })
-    async deleteTask(
-        @Args()
-        { id }: DeleteTaskType,
-        @Ctx() ctx: { prisma: any }
-    ) {
+    async deleteTask(@Arg('id') id: string, @Ctx() ctx: { prisma: any }) {
         return this?.taskService?.deleteOne(ctx, id);
     }
 
@@ -65,30 +44,11 @@ class TaskResolver {
         description: 'Update task by id',
     })
     async updateTask(
-        @Args()
-        {
-            id,
-            subject,
-            status,
-            dueDate,
-            additionalSpentTime,
-            advancement,
-            projectId,
-            userId,
-        }: UpdateTaskType,
+        @Arg('id') id: string,
+        @Arg('data') data: UpdateTaskInput,
         @Ctx() ctx: { prisma: any }
     ) {
-        return this?.taskService?.updateOne(
-            ctx,
-            id,
-            subject,
-            status,
-            dueDate,
-            additionalSpentTime,
-            advancement,
-            projectId,
-            userId
-        );
+        return this?.taskService?.updateOne(ctx, id, data);
     }
 }
 
