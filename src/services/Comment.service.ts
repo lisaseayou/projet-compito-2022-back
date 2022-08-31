@@ -1,4 +1,6 @@
 import { Service } from 'typedi';
+import AddCommentInput from '../inputs/comments/AddComment.input';
+import UpdateCommentInput from '../inputs/comments/UpdateComment.input';
 
 @Service()
 class CommentService {
@@ -11,10 +13,7 @@ class CommentService {
         });
     }
 
-    async save(
-        ctx: any,
-        data: { comment: string; userId: string; taskId?: string }
-    ) {
+    async save(ctx: any, data: AddCommentInput) {
         const { comment, userId, taskId } = data;
 
         const commentToDb = await ctx.prisma.comment.create({
@@ -35,11 +34,7 @@ class CommentService {
         return commentToDb;
     }
 
-    async updateOne(
-        ctx: any,
-        id: string,
-        data: { comment?: string; taskId?: string; userId?: string }
-    ) {
+    async updateOne(ctx: any, id: string, data: UpdateCommentInput) {
         const { comment, taskId, userId } = data;
         const commentToUpdate = ctx.prisma.comment.findUnique({
             where: { id },

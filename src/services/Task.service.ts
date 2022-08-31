@@ -1,4 +1,6 @@
 import { Service } from 'typedi';
+import AddTaskInput from '../inputs/tasks/AddTask.input';
+import UpdateTaskInput from '../inputs/tasks/UpdateTask.input';
 
 @Service()
 class TaskService {
@@ -13,19 +15,7 @@ class TaskService {
         });
     }
 
-    async save(
-        ctx: any,
-        data: {
-            subject: string;
-            status: string;
-            dueDate: string;
-            initialSpentTime: number;
-            additionalSpentTime: number[];
-            advancement: number;
-            projectId: string;
-            userId: string;
-        }
-    ) {
+    async save(ctx: any, data: AddTaskInput) {
         const {
             subject,
             status,
@@ -36,6 +26,7 @@ class TaskService {
             projectId,
             userId,
         } = data;
+
         const taskToDb = await ctx.prisma.task.create({
             data: {
                 subject,
@@ -61,19 +52,7 @@ class TaskService {
         return taskToDb;
     }
 
-    async updateOne(
-        ctx: any,
-        id: string,
-        data: {
-            subject?: string;
-            status?: string;
-            dueDate?: string;
-            additionalSpentTime?: number[];
-            advancement?: number;
-            projectId?: string;
-            userId?: string;
-        }
-    ) {
+    async updateOne(ctx: any, id: string, data: UpdateTaskInput) {
         const {
             subject,
             status,

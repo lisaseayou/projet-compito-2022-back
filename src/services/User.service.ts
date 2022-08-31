@@ -1,6 +1,8 @@
 import { ApolloError } from 'apollo-server-express';
 import { Service } from 'typedi';
 import * as bcrypt from 'bcrypt';
+import UpdateUserInput from '../inputs/users/UpdateUser.input';
+import AddUserInput from '../inputs/users/AddUser.input';
 import generateToken from '../utils/auth';
 
 @Service()
@@ -16,10 +18,7 @@ class UserService {
         });
     }
 
-    async register(
-        ctx: any,
-        data: { name: string; email: string; roles: string[]; password: string }
-    ) {
+    async register(ctx: any, data: AddUserInput) {
         const { name, email, roles, password } = data;
 
         // hash the password
@@ -91,16 +90,7 @@ class UserService {
         return { ...user, success: false };
     }
 
-    async updateOne(
-        ctx: any,
-        id: string,
-        data: {
-            name?: string;
-            email?: string;
-            roles?: string[];
-            password?: string;
-        }
-    ) {
+    async updateOne(ctx: any, id: string, data: UpdateUserInput) {
         const { name, email, roles, password } = data;
 
         const userToUpdate = ctx.prisma.user.findUnique({

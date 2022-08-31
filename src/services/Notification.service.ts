@@ -1,4 +1,6 @@
 import { Service } from 'typedi';
+import AddNotificationInput from '../inputs/notifications/AddNotification.input';
+import UpdateNotificationInput from '../inputs/notifications/UpdateNotification.input';
 
 @Service()
 class NotificationService {
@@ -12,7 +14,7 @@ class NotificationService {
 
     async save(
         ctx: any,
-        data: { description: string; isRead: boolean; userId: string }
+        data: AddNotificationInput
     ) {
         const { description, isRead, userId } = data;
 
@@ -36,11 +38,7 @@ class NotificationService {
     async updateOne(
         ctx: any,
         id: string,
-        data: {
-            description?: string;
-            isRead?: boolean;
-            userId?: string;
-        }
+        data: UpdateNotificationInput
     ) {
         const { description, isRead, userId } = data;
 

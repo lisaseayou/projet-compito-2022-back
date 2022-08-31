@@ -1,4 +1,5 @@
 import { Service } from 'typedi';
+import AddDocumentInput from '../inputs/documents/AddDocument.input';
 
 @Service()
 class DocumentService {
@@ -10,7 +11,7 @@ class DocumentService {
         });
     }
 
-    async save(ctx: any, data: { name: string; size: number; taskId: string }) {
+    async save(ctx: any, data: AddDocumentInput) {
         const { name, size, taskId } = data;
 
         const documentToDb = await ctx.prisma.document.create({

@@ -1,4 +1,6 @@
 import { Service } from 'typedi';
+import UpdateProjectInput from '../inputs/projects/UpdateProject.input';
+import AddProjectInput from '../inputs/projects/AddProject.input';
 
 @Service()
 class ProjectService {
@@ -21,10 +23,7 @@ class ProjectService {
         });
     }
 
-    async save(
-        ctx: any,
-        data: { name: string; description: string; userId: string }
-    ) {
+    async save(ctx: any, data: AddProjectInput) {
         const { name, description, userId } = data;
 
         const projectToDb = await ctx.prisma.project.create({
@@ -44,15 +43,7 @@ class ProjectService {
         return projectToDb;
     }
 
-    async updateOne(
-        ctx: any,
-        id: string,
-        data: {
-            name?: string;
-            description?: string;
-            userId?: string;
-        }
-    ) {
+    async updateOne(ctx: any, id: string, data: UpdateProjectInput) {
         const { name, description, userId } = data;
 
         const projectUpdated = ctx.prisma.project.update({
