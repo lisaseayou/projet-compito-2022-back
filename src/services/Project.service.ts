@@ -2,6 +2,8 @@ import { Service } from 'typedi';
 import UpdateProjectInput from '../inputs/projects/UpdateProject.input';
 import AddProjectInput from '../inputs/projects/AddProject.input';
 import { IContext } from '../interfaces';
+import RecordNotFoundError from '../errors/RecordNotFound.error';
+import DeleteNotFoundError from '../errors/DeleteNotFound.error';
 
 @Service()
 class ProjectService {
@@ -21,6 +23,9 @@ class ProjectService {
                 tasks: true,
                 users: true,
             },
+            rejectOnNotFound: new RecordNotFoundError(
+                "Le projet avec cet id n'existe pas"
+            ),
         });
     }
 
@@ -67,13 +72,20 @@ class ProjectService {
     }
 
     async deleteOne(ctx: IContext, id: string) {
-        const currentProject = ctx.prisma.project.delete({
-            where: { id },
-            include: {
-                tasks: true,
-                users: true,
-            },
-        });
+        const currentProject = await ctx.prisma.project
+            .delete({
+                where: { id },
+                include: {
+                    tasks: true,
+                    users: true,
+                },
+            })
+            .catch(() => {
+                throw new DeleteNotFoundError(
+                    "Le projet à supprimer n'existe pas"
+                );
+            });
+
         return currentProject;
     }
 }

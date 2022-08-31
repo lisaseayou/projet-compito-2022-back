@@ -2,6 +2,7 @@ import { Service } from 'typedi';
 import AddTaskInput from '../inputs/tasks/AddTask.input';
 import UpdateTaskInput from '../inputs/tasks/UpdateTask.input';
 import { IContext } from '../interfaces';
+import RecordNotFoundError from '../errors/RecordNotFound.error';
 
 @Service()
 class TaskService {
@@ -25,6 +26,9 @@ class TaskService {
                 documents: true,
                 users: true,
             },
+            rejectOnNotFound: new RecordNotFoundError(
+                "Le projet avec cet id n'existe pas"
+            ),
         });
     }
 
