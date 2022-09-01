@@ -22,19 +22,19 @@ class UpdateUserInput {
     @MinLength(8, { message: errors.user.password })
     password?: string;
 
-    @Field(() => String, { description: 'Web site of the user' })
+    @Field(() => String, { nullable: true, description: 'Web site of the user' })
     url?: string;
 
-    @Field(() => String, { description: 'twitter username of the user' })
+    @Field(() => String, { nullable: true, description: 'twitter username of the user' })
     twitter?: string;
 
-    @Field(() => String, { description: 'linkedin username of the user' })
+    @Field(() => String, { nullable: true, description: 'linkedin username of the user' })
     linkedin?: string;
 
-    @Field(() => String, { description: 'Github username of the user' })
+    @Field(() => String, { nullable: true, description: 'Github username of the user' })
     github?: string;
 
-    @Field(() => String, { description: 'description of the user' })
+    @Field(() => String, { nullable: true, description: 'description of the user' })
     description?: string;
 }
 
