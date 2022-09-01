@@ -32,6 +32,19 @@ class TaskService {
         });
     }
 
+    async findLast(ctx: IContext, number: number) {
+        return ctx.prisma.project.findMany({
+            take: number,
+            orderBy: { updatedAt: 'desc' },
+            include: {
+                project: true,
+                comments: true,
+                documents: true,
+                users: true,
+            },
+        });
+    }
+
     async save(ctx: IContext, data: AddTaskInput) {
         const {
             subject,

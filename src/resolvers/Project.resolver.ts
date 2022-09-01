@@ -27,6 +27,14 @@ class ProjectResolver {
         return this?.projectService?.findOne(ctx, id);
     }
 
+    @Query(() => [Project], {
+        description: 'Get last projects',
+        nullable: false,
+    })
+    async lastProject(@Arg('number') number: number, @Ctx() ctx: IContext) {
+        return this?.projectService?.findLast(ctx, number);
+    }
+
     @Mutation(() => Project, {
         description: 'Add new project',
         nullable: false,
