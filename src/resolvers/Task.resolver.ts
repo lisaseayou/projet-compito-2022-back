@@ -34,7 +34,6 @@ class TaskResolver {
     async addTask(@Arg('data') data: AddTaskInput, @Ctx() ctx: IContext) {
         return this?.taskService?.save(
             ctx,
-
             data
         );
     }
