@@ -29,6 +29,17 @@ class ProjectService {
         });
     }
 
+    async findLast(ctx: IContext, number: number) {
+        return ctx.prisma.project.findMany({
+            take: number,
+            orderBy: { updatedAt: 'desc' },
+            include: {
+                tasks: true,
+                users: true,
+            },
+        });
+    }
+
     async save(ctx: IContext, data: AddProjectInput) {
         const { name, description, userId } = data;
 

@@ -27,6 +27,14 @@ class TaskResolver {
         return this?.taskService?.findOne(ctx, id);
     }
 
+    @Query(() => [Task, Query], {
+        description: 'Get last tasks',
+        nullable: true,
+    })
+    async lastTasks(@Arg('number') number: number, @Ctx() ctx: IContext) {
+        return this?.taskService?.findLast(ctx, number);
+    }
+
     @Mutation(() => Task, {
         description: 'Add new task',
         nullable: false,
