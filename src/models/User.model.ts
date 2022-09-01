@@ -32,6 +32,36 @@ class User {
     })
     updatedAt: Date;
 
+    @Field(() => String, {
+        nullable: true,
+        description: 'Web site of the user',
+    })
+    url?: string;
+
+    @Field(() => String, {
+        nullable: true,
+        description: 'Twitter username of the user',
+    })
+    twitter?: string;
+
+    @Field(() => String, {
+        nullable: true,
+        description: 'Linkedin username of the user',
+    })
+    linkedin?: string;
+
+    @Field(() => String, {
+        nullable: true,
+        description: 'Github username of the user',
+    })
+    github?: string;
+
+    @Field(() => String, {
+        nullable: true,
+        description: 'description of the user',
+    })
+    description?: string;
+
     @Field(() => [Notification], {
         nullable: true,
         description: 'List of comments related to the user',

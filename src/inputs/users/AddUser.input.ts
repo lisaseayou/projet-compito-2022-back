@@ -18,6 +18,36 @@ class AddUserInput {
     @Field(() => String, { description: 'Password of the user' })
     @MinLength(8, { message: errors.user.password })
     password: string;
+
+    @Field(() => String, {
+        nullable: true,
+        description: 'Web site of the user',
+    })
+    url?: string;
+
+    @Field(() => String, {
+        nullable: true,
+        description: 'twitter username of the user',
+    })
+    twitter?: string;
+
+    @Field(() => String, {
+        nullable: true,
+        description: 'linkedin username of the user',
+    })
+    linkedin?: string;
+
+    @Field(() => String, {
+        nullable: true,
+        description: 'Github username of the user',
+    })
+    github?: string;
+
+    @Field(() => String, {
+        nullable: true,
+        description: 'description of the user',
+    })
+    description?: string;
 }
 
 export default AddUserInput;

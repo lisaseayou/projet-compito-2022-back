@@ -16,6 +16,11 @@ model User {
   password  String
   createdAt DateTime           @default(now()) @map(name: "created_at")
   updatedAt DateTime           @updatedAt @map(name: "updated_at")
+  description String           @default("")         
+  url       String             @default("")
+  twitter   String             @default("")
+  linkedin  String             @default("")
+  github    String             @default("")
   notifications Notification[] @relation("notifs_by_user")
   comments      Comment[]      @relation("comments_by_user")
   projects      Project[]

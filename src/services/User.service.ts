@@ -92,7 +92,17 @@ class UserService {
     }
 
     async updateOne(ctx: IContext, id: string, data: UpdateUserInput) {
-        const { name, email, roles, password } = data;
+        const {
+            name,
+            email,
+            roles,
+            password,
+            description,
+            url,
+            twitter,
+            linkedin,
+            github,
+        } = data;
 
         const userToUpdate = ctx.prisma.user.findUnique({
             where: { id },
@@ -105,6 +115,11 @@ class UserService {
                 email: userToUpdate.email ?? email,
                 roles: userToUpdate.roles ?? roles,
                 password: userToUpdate.password ?? password,
+                description: userToUpdate.description ?? description,
+                url: userToUpdate.url ?? url,
+                twitter: userToUpdate.twitter ?? twitter,
+                linkedin: userToUpdate.linkedin ?? linkedin,
+                github: userToUpdate.github ?? github,
             },
             include: {
                 notifications: true,
