@@ -101,6 +101,11 @@ class UserService {
         return { ...user, success: false };
     }
 
+    async logout(ctx: IContext) {
+        ctx.res.clearCookie('token');
+        return 'Vous êtes bien déconnecté';
+    }
+
     async updateOne(ctx: IContext, id: string, data: UpdateUserInput) {
         const {
             name,

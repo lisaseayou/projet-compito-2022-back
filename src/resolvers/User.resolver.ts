@@ -21,7 +21,7 @@ class UserResolver {
     }
 
     @Query(() => User, {
-        description: 'Get all users',
+        description: 'Get user by resetToken',
         nullable: true,
     })
     async userByResetToken(
@@ -47,6 +47,13 @@ class UserResolver {
         @Ctx() ctx: IContext
     ) {
         return this?.userService?.login(ctx, email, password);
+    }
+
+    @Mutation(() => String, {
+        description: 'Log out user',
+    })
+    async logoutUser(@Ctx() ctx: IContext) {
+        return this?.userService?.logout(ctx);
     }
 
     @Mutation(() => User, {
