@@ -20,6 +20,17 @@ class UserResolver {
         return this?.userService?.findAll(ctx);
     }
 
+    @Query(() => User, {
+        description: 'Get user by resetToken',
+        nullable: true,
+    })
+    async userByResetToken(
+        @Arg('resetToken') resetToken: string,
+        @Ctx() ctx: IContext
+    ) {
+        return this?.userService?.findByResetToken(ctx, resetToken);
+    }
+
     @Mutation(() => User, {
         description: 'Register new user',
         nullable: false,
@@ -38,6 +49,13 @@ class UserResolver {
         return this?.userService?.login(ctx, email, password);
     }
 
+    @Mutation(() => String, {
+        description: 'Log out user',
+    })
+    async logoutUser(@Ctx() ctx: IContext) {
+        return this?.userService?.logout(ctx);
+    }
+
     @Mutation(() => User, {
         description: 'Delete user by id',
     })
@@ -54,6 +72,35 @@ class UserResolver {
         @Ctx() ctx: IContext
     ) {
         return this?.userService?.updateOne(ctx, id, data);
+    }
+
+    @Mutation(() => User, {
+        description: 'Request a change of password',
+    })
+    async requestResetPassword(
+        @Arg('email') email: string,
+        @Ctx() ctx: IContext
+    ) {
+        return this?.userService?.requestResetPassword(ctx, email);
+    }
+
+    @Mutation(() => User, {
+        description: 'reset password',
+    })
+    async resetPassword(
+        @Arg('email') email: string,
+        @Arg('password') password: string,
+        @Arg('passwordConfirm') passwordConfirm: string,
+        @Arg('resetToken') resetToken: string,
+        @Ctx() ctx: IContext
+    ) {
+        return this?.userService?.resetPassword(
+            ctx,
+            email,
+            password,
+            passwordConfirm,
+            resetToken
+        );
     }
 }
 

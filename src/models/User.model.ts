@@ -1,9 +1,10 @@
 /* eslint-disable import/no-cycle */
-import { ObjectType, Field, ID, GraphQLISODateTime } from 'type-graphql';
+import { ObjectType, Field, ID, GraphQLISODateTime, Int } from 'type-graphql';
 import Comment from './Comment.model';
 import Notification from './Notification.model';
 import Project from './Project.model';
 import Task from './Task.model';
+import Role from '../enums/Role.enum';
 
 @ObjectType()
 class User {
@@ -16,8 +17,8 @@ class User {
     @Field(() => String, { description: 'Email of the user' })
     email: string;
 
-    @Field(() => [String], { description: 'Roles of the user' })
-    roles: string[];
+    @Field(() => [Role], { description: 'Roles of the user' })
+    roles: Role[];
 
     @Field(() => String, { description: 'Password of the user' })
     password: string;
@@ -61,6 +62,18 @@ class User {
         description: 'description of the user',
     })
     description?: string;
+
+    @Field(() => String, {
+        nullable: true,
+        description: 'reset token of the user',
+    })
+    resetToken?: string;
+
+    @Field(() => Int, {
+        nullable: true,
+        description: 'reset token expiry of the user',
+    })
+    resetTokenExpiry?: number;
 
     @Field(() => [Notification], {
         nullable: true,

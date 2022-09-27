@@ -1,9 +1,10 @@
 import * as jwt from 'jsonwebtoken';
+import User from '../models/User.model';
 
 /**
- * generate token JWT
+ * generate token JWT for auth
  */
-const generateToken = (infos: any) => {
+const generateToken = (infos: object) => {
     if (!process.env.SECRET_KEY) {
         throw new Error('SECRET_KEY must be set in environment');
     }
@@ -13,6 +14,18 @@ const generateToken = (infos: any) => {
     });
 
     return token;
+};
+
+/**
+ * generate token JWT for change password
+ */
+export const generateTokenResetPassword = (user: User) => {
+    if (!process.env.SECRET_KEY) {
+        throw new Error('SECRET_KEY must be set in environment');
+    }
+
+    const { id, name, email } = user;
+    return jwt.sign({ id, name, email }, process.env.SECRET_KEY);
 };
 
 /**
