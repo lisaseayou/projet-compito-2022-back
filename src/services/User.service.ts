@@ -5,7 +5,7 @@ import * as bcrypt from 'bcrypt';
 import { promisify } from 'util';
 import UpdateUserInput from '../inputs/users/UpdateUser.input';
 import AddUserInput from '../inputs/users/AddUser.input';
-import generateToken from '../utils/auth';
+import generateToken, { generateTokenResetPassword } from '../utils/auth';
 import { IContext } from '../interfaces';
 import RecordNotFoundError from '../errors/RecordNotFound.error';
 import transport, { passwordResetEmail } from '../utils/mail';
@@ -191,6 +191,64 @@ class UserService {
             html: passwordResetEmail(`Your Password Reset Token is here!
       \n\n
       <a href="${passwordResetUrl}">Click Here to Reset</a>`),
+        });
+
+        return updatedUser;
+    }
+
+    async resetPassword(
+        ctx: IContext,
+        email: string,
+        password: string,
+        passwordConfirm: string,
+        resetToken: string
+    ) {
+        // check if passwords match
+        if (password !== passwordConfirm) {
+            throw new Error("Your passwords don't match");
+        }
+
+        // check if the reset token is ok
+        const user = await ctx.prisma.user.findFirst({
+            where: {
+                email,
+                resetToken,
+                // resetTokenExpiry: { gte: Math.floor(expiryCheck / 1000) },
+            },
+            rejectOnNotFound: new Error(
+                'This token is either invalid or expired'
+            ),
+        });
+
+        // hash the new password
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        const updatedUser = await ctx.prisma.user.update({
+            where: { email: user.email },
+            data: {
+                password: hashedPassword,
+                resetToken: null,
+                resetTokenExpiry: null,
+            },
+            include: {
+                notifications: true,
+                projects: true,
+                tasks: true,
+                comments: true,
+            },
+        });
+
+        // generate a JWT
+        const token = generateTokenResetPassword(updatedUser);
+
+        // set the JWT cookie
+        // create the cookies limit to 7 days
+        ctx.res.cookie('token', token, {
+            secure: process.env.NODE_ENV === 'production',
+            httpOnly: true,
+            maxAge: 1000 * 60 * 60 * 24, // 1 day
+            sameSite: 'strict',
         });
 
         return updatedUser;

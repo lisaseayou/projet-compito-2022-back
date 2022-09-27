@@ -65,6 +65,25 @@ class UserResolver {
     ) {
         return this?.userService?.requestResetPassword(ctx, email);
     }
+
+    @Mutation(() => User, {
+        description: 'reset password',
+    })
+    async resetPassword(
+        @Arg('email') email: string,
+        @Arg('password') password: string,
+        @Arg('passwordConfirm') passwordConfirm: string,
+        @Arg('resetToken') resetToken: string,
+        @Ctx() ctx: IContext
+    ) {
+        return this?.userService?.resetPassword(
+            ctx,
+            email,
+            password,
+            passwordConfirm,
+            resetToken
+        );
+    }
 }
 
 export default UserResolver;
