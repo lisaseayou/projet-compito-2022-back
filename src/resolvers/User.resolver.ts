@@ -55,6 +55,16 @@ class UserResolver {
     ) {
         return this?.userService?.updateOne(ctx, id, data);
     }
+
+    @Mutation(() => User, {
+        description: 'Request a change of password',
+    })
+    async requestResetPassword(
+        @Arg('email') email: string,
+        @Ctx() ctx: IContext
+    ) {
+        return this?.userService?.requestResetPassword(ctx, email);
+    }
 }
 
 export default UserResolver;

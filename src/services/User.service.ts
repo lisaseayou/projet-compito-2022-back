@@ -1,10 +1,14 @@
 import { ApolloError } from 'apollo-server-express';
 import { Service } from 'typedi';
+import { randomBytes } from 'crypto';
 import * as bcrypt from 'bcrypt';
+import { promisify } from 'util';
 import UpdateUserInput from '../inputs/users/UpdateUser.input';
 import AddUserInput from '../inputs/users/AddUser.input';
 import generateToken from '../utils/auth';
 import { IContext } from '../interfaces';
+import RecordNotFoundError from '../errors/RecordNotFound.error';
+import transport, { passwordResetEmail } from '../utils/mail';
 
 @Service()
 class UserService {
@@ -143,6 +147,53 @@ class UserService {
         });
 
         return currentUser;
+    }
+
+    async requestResetPassword(ctx: IContext, email: string) {
+        // check if user exist
+        await ctx.prisma.user.findUnique({
+            where: { email },
+            rejectOnNotFound: new RecordNotFoundError(
+                'No user found with that email.'
+            ),
+        });
+
+        // Create randomBytes that will be used as a token
+        const randomBytesPromisified = promisify(randomBytes);
+        const resetToken = (await randomBytesPromisified(20)).toString('hex');
+        const resetTokenExpiry = Date.now() + 3600000; // 1 day
+
+        // Add token and tokenExpiry to the db user
+        const updatedUser = await ctx.prisma.user.update({
+            where: { email },
+            data: {
+                resetToken,
+                resetTokenExpiry,
+            },
+            include: {
+                notifications: true,
+                projects: true,
+                tasks: true,
+                comments: true,
+            },
+        });
+
+        const passwordResetUrl =
+            process.env.NODE_ENV === 'development'
+                ? `http://${process.env.CLIENT_URI}auth/reset-password/${resetToken}`
+                : `https://${process.env.CLIENT_URI}auth/reset-password/${resetToken}`;
+
+        // Email them the token
+        await transport.sendMail({
+            from: process.env.MAIL_SENDER,
+            to: updatedUser.email,
+            subject: 'Your Password Reset Token',
+            html: passwordResetEmail(`Your Password Reset Token is here!
+      \n\n
+      <a href="${passwordResetUrl}">Click Here to Reset</a>`),
+        });
+
+        return updatedUser;
     }
 }
 

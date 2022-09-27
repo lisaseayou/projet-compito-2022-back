@@ -1,5 +1,5 @@
 /* eslint-disable import/no-cycle */
-import { ObjectType, Field, ID, GraphQLISODateTime } from 'type-graphql';
+import { ObjectType, Field, ID, GraphQLISODateTime, Int } from 'type-graphql';
 import Comment from './Comment.model';
 import Notification from './Notification.model';
 import Project from './Project.model';
@@ -61,6 +61,18 @@ class User {
         description: 'description of the user',
     })
     description?: string;
+
+    @Field(() => String, {
+        nullable: true,
+        description: 'reset token of the user',
+    })
+    resetToken?: string;
+
+    @Field(() => Int, {
+        nullable: true,
+        description: 'reset token expiry of the user',
+    })
+    resetTokenExpiry?: number;
 
     @Field(() => [Notification], {
         nullable: true,
