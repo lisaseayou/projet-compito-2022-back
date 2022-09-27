@@ -23,6 +23,12 @@ class UserService {
         });
     }
 
+    async findByResetToken(ctx: IContext, resetToken: string) {
+        return ctx.prisma.user.findUnique({
+            where: { resetToken },
+        });
+    }
+
     async register(ctx: IContext, data: AddUserInput) {
         const { name, email, roles, password } = data;
 

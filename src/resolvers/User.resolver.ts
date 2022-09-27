@@ -20,6 +20,17 @@ class UserResolver {
         return this?.userService?.findAll(ctx);
     }
 
+    @Query(() => User, {
+        description: 'Get all users',
+        nullable: true,
+    })
+    async userByResetToken(
+        @Arg('resetToken') resetToken: string,
+        @Ctx() ctx: IContext
+    ) {
+        return this?.userService?.findByResetToken(ctx, resetToken);
+    }
+
     @Mutation(() => User, {
         description: 'Register new user',
         nullable: false,
