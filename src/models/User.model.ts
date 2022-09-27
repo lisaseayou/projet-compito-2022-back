@@ -4,6 +4,7 @@ import Comment from './Comment.model';
 import Notification from './Notification.model';
 import Project from './Project.model';
 import Task from './Task.model';
+import Role from '../enums/Role.enum';
 
 @ObjectType()
 class User {
@@ -16,8 +17,8 @@ class User {
     @Field(() => String, { description: 'Email of the user' })
     email: string;
 
-    @Field(() => [String], { description: 'Roles of the user' })
-    roles: string[];
+    @Field(() => [Role], { description: 'Roles of the user' })
+    roles: Role[];
 
     @Field(() => String, { description: 'Password of the user' })
     password: string;

@@ -1,5 +1,6 @@
 import { IsEmail, Length, MinLength } from 'class-validator';
 import { InputType, Field } from 'type-graphql';
+import Role from '../../enums/Role.enum';
 import errors from '../../utils/validation';
 
 @InputType()
@@ -12,12 +13,16 @@ class AddUserInput {
     @IsEmail({}, { message: errors.user.email })
     email: string;
 
-    @Field(() => [String], { description: 'Roles of the user' })
-    roles: string[];
+    @Field(() => [Role], { description: 'Roles of the user' })
+    roles: Role[];
 
     @Field(() => String, { description: 'Password of the user' })
     @MinLength(8, { message: errors.user.password })
     password: string;
+
+    @Field(() => String, { description: 'Password confirm of the user' })
+    @MinLength(8, { message: errors.user.password })
+    passwordConfirm: string;
 
     @Field(() => String, {
         nullable: true,

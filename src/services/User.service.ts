@@ -30,7 +30,22 @@ class UserService {
     }
 
     async register(ctx: IContext, data: AddUserInput) {
-        const { name, email, roles, password } = data;
+        const { name, email, roles, password, passwordConfirm } = data;
+
+        // check if user exist
+        const user = await ctx.prisma.user.findUnique({
+            where: { email },
+            rejectOnNotFound: false,
+        });
+
+        if (user) {
+            throw new ApolloError('Un utilisateur avec cet email existe déjà.');
+        }
+
+        // check if passwords match
+        if (password !== passwordConfirm) {
+            throw new Error('Les mots de passes ne correspondent pas');
+        }
 
         // hash the password
         const salt = await bcrypt.genSalt(10);
@@ -71,34 +86,31 @@ class UserService {
 
     async login(ctx: IContext, email: string, password: string) {
         // check if user exist
-        const user = ctx.prisma.user.findUnique({
+        const user = await ctx.prisma.user.findUnique({
             where: { email },
+            rejectOnNotFound: new RecordNotFoundError(
+                'Vérifiez vos informations'
+            ),
         });
 
-        if (!user) {
-            throw new ApolloError("Cet utilisateur n'existe pas");
+        // validate password
+        const match = await bcrypt.compare(password, user.password);
+        if (!match) {
+            throw new ApolloError('Vérifiez vos informations');
         }
 
-        await user.then(async (result: any) => {
-            const match = await bcrypt.compare(password, result.password);
+        const { name, roles } = user;
+        const token = generateToken({ name, email, roles });
 
-            if (!match) {
-                throw new ApolloError('Vérifiez vos informations');
-            }
-
-            const { name, roles } = result;
-            const token = generateToken({ name, email, roles });
-
-            // create the cookies limit to 7 days
-            await ctx.res.cookie('token', token, {
-                secure: process.env.NODE_ENV === 'production',
-                httpOnly: true,
-                maxAge: 1000 * 60 * 60 * 24 * 7,
-                sameSite: 'strict',
-            });
+        // create the cookies limit to 7 days
+        ctx.res.cookie('token', token, {
+            secure: process.env.NODE_ENV === 'production',
+            httpOnly: true,
+            maxAge: 1000 * 60 * 60 * 24 * 7,
+            sameSite: 'strict',
         });
 
-        return { ...user, success: false };
+        return { ...user, success: true };
     }
 
     async logout(ctx: IContext) {
