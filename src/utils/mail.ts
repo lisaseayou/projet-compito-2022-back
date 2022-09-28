@@ -17,9 +17,10 @@ export const passwordResetEmail = (text: string) => `
         line-height: 2;
         font-size: 20px;
     ">
-        <h2>Hello</h2>
+        <h2>Bonjour</h2>
         <p>${text}</p>
-        <p>Thank you</p>
+        <p>Merci et à bientôt.</p>
+        <p>L'équipe Compito.</p>
     </div>
 `;
 

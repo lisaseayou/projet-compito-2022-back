@@ -210,10 +210,10 @@ class UserService {
         await transport.sendMail({
             from: process.env.MAIL_SENDER,
             to: updatedUser.email,
-            subject: 'Your Password Reset Token',
-            html: passwordResetEmail(`Your Password Reset Token is here!
+            subject: 'Demande de changement de mot de passe sur Compito',
+            html: passwordResetEmail(`Voici le lien pour définir un nouveau mot de passe.
       \n\n
-      <a href="${passwordResetUrl}">Click Here to Reset</a>`),
+      <a href="${passwordResetUrl}">Cliquer sur ce lien</a>`),
         });
 
         return updatedUser;
@@ -260,6 +260,16 @@ class UserService {
                 tasks: true,
                 comments: true,
             },
+        });
+
+        // Email them the token
+        await transport.sendMail({
+            from: process.env.MAIL_SENDER,
+            to: updatedUser.email,
+            subject: 'Changement de mot de passe sur Compito',
+            html: passwordResetEmail(
+                `Votre mot de passe a été changé avec succès!`
+            ),
         });
 
         // generate a JWT
