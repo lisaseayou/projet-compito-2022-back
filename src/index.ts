@@ -27,7 +27,11 @@ const main = async () => {
     const corsConfig =
         process.env.NODE_ENV !== 'production'
             ? {
-                  origin: [process.env.FRONT_URL, process.env.MOBILE_URL],
+                  origin: [
+                      process.env.FRONT_URL,
+                      process.env.MOBILE_URL,
+                      'https://studio.apollographql.com',
+                  ],
                   credentials: true,
               }
             : {
