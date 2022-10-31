@@ -17,6 +17,19 @@ class TaskService {
         });
     }
 
+    async findByDay(ctx: IContext, userId: string, limit: number) {
+        return ctx.prisma.task.findMany({
+            where: { users: { some: { id: userId } } },
+            take: limit,
+            include: {
+                project: true,
+                comments: true,
+                documents: true,
+                users: true,
+            },
+        });
+    }
+
     async findOne(ctx: IContext, id: string) {
         return ctx.prisma.task.findUnique({
             where: { id },
@@ -32,9 +45,9 @@ class TaskService {
         });
     }
 
-    async findLast(ctx: IContext, number: number) {
+    async findLast(ctx: IContext, limit: number) {
         return ctx.prisma.project.findMany({
-            take: number,
+            take: limit,
             orderBy: { updatedAt: 'desc' },
             include: {
                 project: true,

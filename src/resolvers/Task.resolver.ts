@@ -19,6 +19,18 @@ class TaskResolver {
         return this?.taskService?.findAll(ctx);
     }
 
+    @Query(() => [Task, Query], {
+        description: 'Get all tasks by day',
+        nullable: true,
+    })
+    async tasksByDay(
+        @Arg('userId') userId: string,
+        @Arg('limit') limit: number,
+        @Ctx() ctx: IContext
+    ) {
+        return this?.taskService?.findByDay(ctx, userId, limit);
+    }
+
     @Query(() => Task, {
         description: 'Get one task by id',
         nullable: false,
@@ -31,8 +43,8 @@ class TaskResolver {
         description: 'Get last tasks',
         nullable: true,
     })
-    async lastTasks(@Arg('number') number: number, @Ctx() ctx: IContext) {
-        return this?.taskService?.findLast(ctx, number);
+    async lastTasks(@Arg('limit') limit: number, @Ctx() ctx: IContext) {
+        return this?.taskService?.findLast(ctx, limit);
     }
 
     @Mutation(() => Task, {
@@ -40,10 +52,7 @@ class TaskResolver {
         nullable: false,
     })
     async addTask(@Arg('data') data: AddTaskInput, @Ctx() ctx: IContext) {
-        return this?.taskService?.save(
-            ctx,
-            data
-        );
+        return this?.taskService?.save(ctx, data);
     }
 
     @Mutation(() => Task, {

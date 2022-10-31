@@ -26,6 +26,9 @@ class UserService {
     async findByResetToken(ctx: IContext, resetToken: string) {
         return ctx.prisma.user.findUnique({
             where: { resetToken },
+            rejectOnNotFound: new RecordNotFoundError(
+                "Vous n'êtes pas autorisé à modifier le mot de passe de cet utilisateur."
+            ),
         });
     }
 
@@ -44,7 +47,7 @@ class UserService {
 
         // check if passwords match
         if (password !== passwordConfirm) {
-            throw new Error('Les mots de passes ne correspondent pas');
+            throw new Error('Les mots de passe doivent être identiques.');
         }
 
         // hash the password
@@ -89,14 +92,14 @@ class UserService {
         const user = await ctx.prisma.user.findUnique({
             where: { email },
             rejectOnNotFound: new RecordNotFoundError(
-                'Vérifiez vos informations'
+                'Vérifiez vos informations de connexion.'
             ),
         });
 
         // validate password
         const match = await bcrypt.compare(password, user.password);
         if (!match) {
-            throw new ApolloError('Vérifiez vos informations');
+            throw new ApolloError('Vérifiez vos informations de connexion.');
         }
 
         const { name, roles } = user;
@@ -115,7 +118,7 @@ class UserService {
 
     async logout(ctx: IContext) {
         ctx.res.clearCookie('token');
-        return 'Vous êtes bien déconnecté';
+        return 'Vous êtes bien déconnecté.';
     }
 
     async updateOne(ctx: IContext, id: string, data: UpdateUserInput) {
@@ -177,7 +180,7 @@ class UserService {
         await ctx.prisma.user.findUnique({
             where: { email },
             rejectOnNotFound: new RecordNotFoundError(
-                'No user found with that email.'
+                "Aucun compte n'est associé avec cet email."
             ),
         });
 
@@ -228,7 +231,7 @@ class UserService {
     ) {
         // check if passwords match
         if (password !== passwordConfirm) {
-            throw new Error("Your passwords don't match");
+            throw new Error('Les mots de passe doivent être identiques.');
         }
 
         // check if the reset token is ok
@@ -239,7 +242,7 @@ class UserService {
                 // resetTokenExpiry: { gte: Math.floor(expiryCheck / 1000) },
             },
             rejectOnNotFound: new Error(
-                'This token is either invalid or expired'
+                "Vous n'êtes pas autorisé à modifier le mot de passe de cet utilisateur."
             ),
         });
 

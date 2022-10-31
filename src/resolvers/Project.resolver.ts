@@ -19,6 +19,17 @@ class ProjectResolver {
         return this?.projectService?.findAll(ctx);
     }
 
+    @Query(() => [Project, Query], {
+        description: 'Get all projects by user',
+        nullable: true,
+    })
+    async projectsByUser(
+        @Arg('userId') userId: string,
+        @Ctx() ctx: IContext
+    ) {
+        return this?.projectService?.findByUser(ctx, userId);
+    }
+
     @Query(() => Project, {
         description: 'Get one project by id',
         nullable: false,
@@ -31,8 +42,12 @@ class ProjectResolver {
         description: 'Get last projects',
         nullable: false,
     })
-    async lastProject(@Arg('number') number: number, @Ctx() ctx: IContext) {
-        return this?.projectService?.findLast(ctx, number);
+    async lastProjectByUser(
+        @Arg('limit') limit: number,
+        @Arg('userId') userId: string,
+        @Ctx() ctx: IContext
+    ) {
+        return this?.projectService?.findLastByUser(ctx, limit, userId);
     }
 
     @Mutation(() => Project, {
