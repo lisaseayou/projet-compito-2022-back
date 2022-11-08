@@ -25,3 +25,14 @@ services:
             POSTGRES_PASSWORD: postgres
             POSTGRES_DB: postgres
         restart: always
+
+    client: 
+        build: ../front
+        ports: 
+          - 3000:3000
+        depends_on: 
+          - api 
+        volumes: 
+          - ../front:/app
+          - /app/node_modules
+        restart: always
