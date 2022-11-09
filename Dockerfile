@@ -3,7 +3,6 @@ FROM node:lts AS DEPENDENCIES
 WORKDIR /app
 
 COPY package*.json ./
-COPY yarn.lock ./
 COPY .env ./
 COPY tsconfig.json ./
 
