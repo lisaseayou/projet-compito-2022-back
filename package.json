@@ -6,7 +6,9 @@
     "scripts": {
         "dev": "nodemon --exec ts-node src/index.ts",
         "lint": "eslint src/**/*.ts",
-        "postinstall": "prisma generate"
+        "postinstall": "prisma generate",
+        "build": "tsc",
+        "prod": "node dist/index.js"
     },
     "keywords": [],
     "author": "",

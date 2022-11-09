@@ -1,0 +1,59 @@
+version: '3.9'
+
+services:
+    api:
+        build: .
+        command: sh -c "yarn build && yarn prod"
+        volumes:
+            - ./:/app
+            - /app/node_modules
+        ports:
+            - 4040:4000
+        depends_on:
+            - postgres
+        # environment:
+        #     - DATABASE_URL=postgresql://postgres:postgres@postgres/postgres?schema=public
+        restart: always
+        environment:
+            - NODE_ENV=production
+
+    postgres:
+        image: postgres
+        container_name: postgres
+        hostname: postgres
+        ports:
+            - 5432:5432
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: postgres
+        restart: always
+
+    client:
+        build: ../front
+        command: sh -c "npm run build"
+        ports:
+            - 3000:3000
+        depends_on:
+            - api
+        volumes:
+            - web-client-build:/app/build
+        restart: always
+        environment:
+            - NODE_ENV=production
+
+    nginx:
+        image: nginx:1.21.3
+        depends_on:
+            - api
+            - client
+        restart: always
+        ports:
+            - ${GATEWAY_PORT:-8000}:80
+        volumes:
+            - ./nginx.conf:/etc/nginx/nginx.conf
+            - web-client-build:/web-client-build
+            - ./logs:/var/log/nginx
+
+volumes:
+    web-client-build:
