@@ -9,7 +9,7 @@ import { IContext } from '../interfaces';
 @Service()
 @Resolver(Task)
 class TaskResolver {
-    constructor(private readonly taskService: TaskService) {}
+    constructor(private readonly taskService: TaskService) { }
 
     @Query(() => [Task, Query], {
         description: 'Get all tasks',
@@ -17,6 +17,17 @@ class TaskResolver {
     })
     async allTasks(@Ctx() ctx: IContext) {
         return this?.taskService?.findAll(ctx);
+    }
+
+    @Query(() => [Task, Query], {
+        description: 'Get all tasks by user',
+        nullable: true,
+    })
+    async tasksByProject(
+        @Arg('projectId') projectId: string,
+        @Ctx() ctx: IContext
+    ) {
+        return this?.taskService?.findByProject(ctx, projectId);
     }
 
     @Query(() => [Task, Query], {

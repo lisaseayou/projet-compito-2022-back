@@ -17,6 +17,19 @@ class TaskService {
         });
     }
 
+    async findByProject(ctx: IContext, projectId: string) {
+        return ctx.prisma.task.findMany({
+            where: { project: { is: { id: projectId } } },
+            orderBy: { updatedAt: 'asc' },
+            include: {
+                project: true,
+                comments: true,
+                documents: true,
+                users: true,
+            },
+        });
+    }
+
     async findByDay(ctx: IContext, userId: string, limit: number) {
         return ctx.prisma.task.findMany({
             where: { users: { some: { id: userId } } },
@@ -123,8 +136,8 @@ class TaskService {
                 },
                 users: userId
                     ? {
-                          connect: [{ id: userId }],
-                      }
+                        connect: [{ id: userId }],
+                    }
                     : {},
             },
             include: {
