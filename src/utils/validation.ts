@@ -5,7 +5,8 @@ const errors = {
         password: 'Le mot de passe doit comporter 8 caractères minimum',
     },
     task: {
-        subject: 'Le sujet doit contenir entre 3 et 100 caractères',
+        name: 'Le sujet doit contenir entre 3 et 100 caractères',
+        description: 'La description doit contenir entre 3 et 250 caractères',
     },
     project: {
         name: 'Le titre du projet doit contenir entre 3 et 100 caractères',

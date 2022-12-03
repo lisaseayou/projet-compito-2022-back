@@ -73,7 +73,8 @@ class TaskService {
 
     async save(ctx: IContext, data: AddTaskInput) {
         const {
-            subject,
+            name,
+            description,
             status,
             dueDate,
             initialSpentTime,
@@ -85,7 +86,9 @@ class TaskService {
 
         const taskToDb = await ctx.prisma.task.create({
             data: {
-                subject,
+                name,
+                description,
+                view: 0,
                 status,
                 dueDate,
                 initialSpentTime,
@@ -110,7 +113,9 @@ class TaskService {
 
     async updateOne(ctx: IContext, id: string, data: UpdateTaskInput) {
         const {
-            subject,
+            name,
+            description,
+            view,
             status,
             dueDate,
             additionalSpentTime,
@@ -125,7 +130,9 @@ class TaskService {
         const taskUpdated = ctx.prisma.task.update({
             where: { id },
             data: {
-                subject: taskToUpdate.subject ?? subject,
+                name: taskToUpdate.name ?? name,
+                description: taskToUpdate.description ?? description,
+                view: taskToUpdate.view ?? view,
                 status: taskToUpdate.status ?? status,
                 dueDate: taskToUpdate.dueDate ?? dueDate,
                 additionalSpentTime:

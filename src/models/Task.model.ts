@@ -1,6 +1,5 @@
 /* eslint-disable import/no-cycle */
 import { ObjectType, Field, ID, Int, GraphQLISODateTime } from 'type-graphql';
-import Status from '../enums/Status.enum';
 import Comment from './Comment.model';
 import Document from './Document.model';
 import Project from './Project.model';
@@ -11,11 +10,17 @@ class Task {
     @Field(() => ID, { description: 'Id of the task' })
     id: string;
 
-    @Field(() => String, { description: 'Subject of the task' })
-    subject: string;
+    @Field(() => String, { description: 'title of the task' })
+    name: string;
 
-    @Field(() => Status, { description: 'Status of the task' })
-    status: Status;
+    @Field(() => String, { description: 'description of the task' })
+    description: string;
+
+    @Field(() => String, { description: 'Status of the task' })
+    status: string;
+
+    @Field(() => Int, { description: 'Number of view of the task' })
+    view: number;
 
     @Field(() => String)
     dueDate: string;

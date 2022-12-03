@@ -6,8 +6,12 @@ import errors from '../../utils/validation';
 @InputType()
 class AddTaskInput {
     @Field(() => String)
-    @Length(3, 100, { message: errors.task.subject })
-    subject: string;
+    @Length(3, 100, { message: errors.task.name })
+    name: string;
+
+    @Field(() => String, { description: 'description of the task' })
+    @Length(3, 250, { message: errors.task.description })
+    description: string;
 
     @Field(() => Status)
     status: Status;
