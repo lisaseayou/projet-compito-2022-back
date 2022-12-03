@@ -1,5 +1,6 @@
 import { Length } from 'class-validator';
 import { InputType, Field, Int } from 'type-graphql';
+import Status from '../../enums/Status.enum';
 import errors from '../../utils/validation';
 
 @InputType()
@@ -8,8 +9,8 @@ class UpdateTaskInput {
     @Length(3, 100, { message: errors.task.subject })
     subject?: string;
 
-    @Field(() => String, { nullable: true })
-    status?: string;
+    @Field(() => Status, { nullable: true })
+    status?: Status;
 
     @Field(() => String, { nullable: true })
     dueDate?: string;
