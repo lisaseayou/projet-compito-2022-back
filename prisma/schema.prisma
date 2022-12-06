@@ -76,8 +76,10 @@ model Project {
 
 model Task {
   id                    String     @id @unique @default(uuid()) @db.Uuid
-  subject               String
+  name                  String
+  description           String
   status                String
+  view                  Int
   dueDate               String     @map(name: "due_date")
   initialSpentTime      Int        @map(name: "initial_spent_time")
   additionalSpentTime   Int[]      @map(name: "additional_spent_time")
