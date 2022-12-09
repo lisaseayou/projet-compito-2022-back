@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import * as Express from 'express';
+import express from 'express';
 import { createServer } from 'http';
 import { ApolloServer } from 'apollo-server-express';
 import { GraphQLSchema } from 'graphql';
@@ -19,7 +19,7 @@ const getExpressServer = async (
     const prisma = new PrismaClient({ rejectOnNotFound: { findUnique: true } });
 
     // Create server with express
-    const expressServer = Express();
+    const expressServer = express();
     expressServer.use(cors(corsConfig));
     expressServer.use(cookieParser());
 
