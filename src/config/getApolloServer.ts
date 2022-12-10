@@ -19,7 +19,7 @@ const getApolloServer = async (
     const server = new ApolloServer({
         schema,
         context: ({ req, res }) => {
-            const userLogged = getUser(req.cookies.token);
+            const userLogged = getUser(req?.cookies?.token);
             return {
                 req,
                 res,

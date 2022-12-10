@@ -3,15 +3,16 @@ import express from 'express';
 import { createServer } from 'http';
 import { ApolloServer } from 'apollo-server-express';
 import { GraphQLSchema } from 'graphql';
-import * as cors from 'cors';
-import * as cookieParser from 'cookie-parser';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import getApolloServer from './getApolloServer';
+import * as core from 'express-serve-static-core';
 
 const getExpressServer = async (
     resolversPath: string,
     corsConfig: any
 ): Promise<{
-    expressServer: Express.Application;
+    expressServer: core.Express;
     apolloServer: ApolloServer;
     graphQLSchema: GraphQLSchema;
 }> => {
