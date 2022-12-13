@@ -9,7 +9,7 @@ import { IContext } from '../interfaces';
 @Service()
 @Resolver(Project)
 class ProjectResolver {
-    constructor(private readonly projectService: ProjectService) {}
+    constructor(private readonly projectService: ProjectService) { }
 
     @Query(() => [Project, Query], {
         description: 'Get all projects',

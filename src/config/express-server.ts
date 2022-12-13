@@ -1,25 +1,28 @@
 import { PrismaClient } from '@prisma/client';
-import * as Express from 'express';
+import express from 'express';
 import { createServer } from 'http';
 import { ApolloServer } from 'apollo-server-express';
 import { GraphQLSchema } from 'graphql';
-import * as cors from 'cors';
-import * as cookieParser from 'cookie-parser';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import getApolloServer from './getApolloServer';
+import * as core from 'express-serve-static-core';
 
 const getExpressServer = async (
     resolversPath: string,
-    corsConfig: any
+    corsConfig: any,
+    url: string
 ): Promise<{
-    expressServer: Express.Application;
+    expressServer: core.Express;
     apolloServer: ApolloServer;
     graphQLSchema: GraphQLSchema;
+    prisma: any
 }> => {
     // init client prisma
-    const prisma = new PrismaClient({ rejectOnNotFound: { findUnique: true } });
+    const prisma = new PrismaClient({ datasources: { db: { url } }, rejectOnNotFound: { findUnique: true } });
 
     // Create server with express
-    const expressServer = Express();
+    const expressServer = express();
     expressServer.use(cors(corsConfig));
     expressServer.use(cookieParser());
 
@@ -36,7 +39,7 @@ const getExpressServer = async (
         path: '/',
     });
 
-    return { expressServer, apolloServer, graphQLSchema };
+    return { expressServer, apolloServer, graphQLSchema, prisma };
 };
 
 export default getExpressServer;

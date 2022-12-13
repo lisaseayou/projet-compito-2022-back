@@ -10,7 +10,7 @@ import { IContext } from '../interfaces';
 @Service()
 @Resolver(User)
 class UserResolver {
-    constructor(private readonly userService: UserService) {}
+    constructor(private readonly userService: UserService) { }
 
     @Query(() => [User, Query], {
         description: 'Get all users',

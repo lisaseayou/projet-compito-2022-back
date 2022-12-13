@@ -9,17 +9,18 @@ services:
         ports:
             - 4040:4000
         depends_on:
-            - postgres
+            - postgres-test
         environment:
-            - DATABASE_URL=postgresql://postgres:postgres@postgres/postgres?schema=public&connect_timeout=300
+            - DATABASE_URL=postgresql://postgres:postgres@postgres/postgres-test?schema=public&connect_timeout=300
         restart: always
+        command: sh -c "yarn run db:migrate && tail -f /dev/null"
 
-    postgres:
+    postgres-test:
         image: postgres
-        container_name: postgres
+        container_name: postgres-test
         hostname: postgres
-        ports:
-            - 5432:5432
+        # ports:
+        #     - 5433:5433
         environment:
             POSTGRES_USER: postgres
             POSTGRES_PASSWORD: postgres
