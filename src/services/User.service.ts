@@ -55,11 +55,11 @@ class UserService {
         const passwordHashed = await bcrypt.hash(password, salt);
 
         // generate the token of connection
-        const token = generateToken({
-            name,
-            email,
-            roles,
-        });
+        // const token = generateToken({
+        //     name,
+        //     email,
+        //     roles,
+        // });
 
         const userToDb = await ctx.prisma.user.create({
             data: {
@@ -77,12 +77,12 @@ class UserService {
         });
 
         // create the cookies limit to 7 days
-        ctx.res.cookie('token', token, {
-            secure: process.env.NODE_ENV === 'production',
-            httpOnly: true,
-            maxAge: 1000 * 60 * 60 * 24 * 7,
-            sameSite: 'strict',
-        });
+        // ctx.res.cookie('token', token, {
+        //     secure: process.env.NODE_ENV === 'production',
+        //     httpOnly: true,
+        //     maxAge: 1000 * 60 * 60 * 24 * 7,
+        //     sameSite: 'strict',
+        // });
 
         return { ...userToDb, success: true };
     }

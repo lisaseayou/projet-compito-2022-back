@@ -16,6 +16,7 @@ const getExpressServer = async (
     expressServer: core.Express;
     apolloServer: ApolloServer;
     graphQLSchema: GraphQLSchema;
+    prisma: any
 }> => {
     // init client prisma
     const prisma = new PrismaClient({ datasources: { db: { url } }, rejectOnNotFound: { findUnique: true } });
@@ -38,7 +39,7 @@ const getExpressServer = async (
         path: '/',
     });
 
-    return { expressServer, apolloServer, graphQLSchema };
+    return { expressServer, apolloServer, graphQLSchema, prisma };
 };
 
 export default getExpressServer;
