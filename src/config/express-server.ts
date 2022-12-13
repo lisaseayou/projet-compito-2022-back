@@ -10,14 +10,15 @@ import * as core from 'express-serve-static-core';
 
 const getExpressServer = async (
     resolversPath: string,
-    corsConfig: any
+    corsConfig: any,
+    url: string
 ): Promise<{
     expressServer: core.Express;
     apolloServer: ApolloServer;
     graphQLSchema: GraphQLSchema;
 }> => {
     // init client prisma
-    const prisma = new PrismaClient({ rejectOnNotFound: { findUnique: true } });
+    const prisma = new PrismaClient({ datasources: { db: { url } }, rejectOnNotFound: { findUnique: true } });
 
     // Create server with express
     const expressServer = express();

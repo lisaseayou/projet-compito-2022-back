@@ -21,7 +21,7 @@ export const corsConfig =
         };
 
 const main = async () => {
-    if (!process.env.FRONT_URL || !process.env.MOBILE_URL) {
+    if (!process.env.DATABASE_URL || !process.env.FRONT_URL || !process.env.MOBILE_URL) {
         throw new Error(
             'The environment variable FRONT_URL and MOBILE_URL must be specified'
         );
@@ -29,7 +29,8 @@ const main = async () => {
 
     const { expressServer, apolloServer } = await getExpressServer(
         `${__dirname}/**/*.resolver.{ts,js}`,
-        corsConfig
+        corsConfig,
+        process.env.DATABASE_URL
     );
 
     // run a web server

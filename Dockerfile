@@ -8,8 +8,8 @@ COPY tsconfig.json ./
 
 COPY . .
 
-RUN yarn
+RUN yarn --network-timeout 100000
 
 EXPOSE 4000
 
-CMD yarn dev & npx nodemon -w package.json --exec "yarn"
+CMD yarn dev & npx nodemon -w package.json --exec "yarn --network-timeout 100000"

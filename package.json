@@ -10,7 +10,8 @@
         "build": "tsc",
         "prod": "node dist/index.js",
         "test": "jest",
-        "test:watch": "jest --watchAll"
+        "test:watch": "jest --watchAll",
+        "db:migrate": "npx prisma migrate dev"
     },
     "keywords": [],
     "author": "",

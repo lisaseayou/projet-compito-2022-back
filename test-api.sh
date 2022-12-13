@@ -1,2 +1,2 @@
 echo "hello world"
-docker compose exec api yarn test
+docker compose exec api yarn test:watch

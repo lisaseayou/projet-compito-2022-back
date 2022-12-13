@@ -8,7 +8,8 @@ describe('server', () => {
     beforeAll(async () => {
         const { apolloServer } = await getExpressServer(
             `${__dirname}/**/*.resolver.{ts,js}`,
-            corsConfig
+            corsConfig,
+            `${process.env.DATABASE_URL}`
         );
 
         server = apolloServer;
