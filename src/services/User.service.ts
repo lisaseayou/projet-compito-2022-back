@@ -63,9 +63,9 @@ class UserService {
 
         const userToDb = await ctx.prisma.user.create({
             data: {
-                name: data.name,
-                email: data.email,
-                roles: data.roles,
+                name: name,
+                email: email,
+                roles: roles,
                 password: passwordHashed,
             },
             include: {
