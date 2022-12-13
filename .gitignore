@@ -79,3 +79,7 @@ yarn.lock
 # modules
 /node_modules/
 /prisma/migrations/
+
+# build
+/dist
+/build
