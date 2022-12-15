@@ -82,8 +82,8 @@ class ProjectService {
                 description,
                 users: userId
                     ? {
-                          connect: [{ id: userId }],
-                      }
+                        connect: [{ id: userId }],
+                    }
                     : {},
             },
             include: {

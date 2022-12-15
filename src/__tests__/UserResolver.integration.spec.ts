@@ -20,7 +20,6 @@ describe('server', () => {
         const { apolloServer } = await getExpressServer(
             `${__dirname}/**/*.resolver.{ts,js}`,
             corsConfig,
-            `${process.env.DATABASE_URL}`
         );
         server = apolloServer;
     });
@@ -29,7 +28,6 @@ describe('server', () => {
         const { prisma } = await getExpressServer(
             `${__dirname}/**/*.resolver.{ts,js}`,
             corsConfig,
-            `${process.env.DATABASE_URL}`
         );
         const deleteUser = prisma.user.deleteMany();
         const deleteComment = prisma.comment.deleteMany();
