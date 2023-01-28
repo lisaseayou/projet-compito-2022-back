@@ -23,7 +23,7 @@ class AddTaskInput {
     initialSpentTime: number;
 
     @Field(() => [Int])
-    additionalSpentTime: [number];
+    additionalSpentTime: number[];
 
     @Field(() => Int)
     advancement: number;

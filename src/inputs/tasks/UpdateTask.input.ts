@@ -22,8 +22,11 @@ class UpdateTaskInput {
     @Field(() => String, { nullable: true })
     dueDate?: string;
 
+    @Field(() => Int, { nullable: true })
+    initialSpentTime?: number;
+
     @Field(() => [Int], { nullable: true })
-    additionalSpentTime?: [number];
+    additionalSpentTime?: number[];
 
     @Field(() => Int, { nullable: true })
     advancement?: number;
